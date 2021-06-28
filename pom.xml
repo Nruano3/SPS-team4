@@ -4,11 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.google.sps</groupId>
-<<<<<<< HEAD
-  <artifactId>summer21-sps-4</artifactId>
-=======
   <artifactId>SPS-team4</artifactId>
->>>>>>> 97fa5134fb5370e5b9573ce64743ba00698030d0
   <version>1</version>
 
   <properties>

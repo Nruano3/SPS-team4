@@ -31,14 +31,11 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
-<<<<<<< HEAD
-=======
 	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
->>>>>>> 97fa5134fb5370e5b9573ce64743ba00698030d0
 	<classpathentry kind="src" output="target/test-classes" path="target/generated-test-sources/test-annotations">
 		<attributes>
 			<attribute name="optional" value="true"/>

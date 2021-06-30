@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreOptions;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.sps.util.CredentialManager;
@@ -51,7 +49,7 @@ public class UserLoginCallbackServlet extends HttpServlet {
     private static String TOKEN_REQ_URL;
     private static String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo?&access_token=";
     private static final int TESTING = 0;
-    private static final int PRODUCTION = 1;
+   // private static final int PRODUCTION = 1;
     private static CloseableHttpClient HTTP_CLIENT;
 
     @Override
@@ -146,23 +144,23 @@ public class UserLoginCallbackServlet extends HttpServlet {
 
     private static HttpResponse sendTokenRequest(String code) throws ClientProtocolException, IOException {
 
-        String tokenUri = buildTokenUri(code);
+        buildTokenUri(code);
         
-        HttpPost request = new HttpPost(tokenUri);
+        HttpPost request = new HttpPost(TOKEN_REQ_URL);
 
         return HTTP_CLIENT.execute(request);
 
 
     }
 
-    private static String buildTokenUri(String code){
+    private static void buildTokenUri(String code){
         StringBuilder sb = new StringBuilder().append(APP_CREDENTIALS.getToken_uri()).append("?").append("&client_id=")
                 .append(APP_CREDENTIALS.getClient_id()).append("&client_secret=")
                 .append(APP_CREDENTIALS.getClient_secret()).append("&code=").append(code)
                 .append("&grant_type=authorization_code").append("&redirect_uri=")
                 .append(APP_CREDENTIALS.getRedirect_uris()[TESTING]);
-
-        return sb.toString();
+        TOKEN_REQ_URL = sb.toString();
+        
     }
     private static JsonObject extractJsonFromResponse(HttpResponse response) throws ParseException, IOException {
         HttpEntity entity = response.getEntity();

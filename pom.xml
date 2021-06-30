@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.google.sps</groupId>
-  <artifactId>SPS-team4</artifactId>
+  <artifactId>summer21-sps-4</artifactId>
   <version>1</version>
 
   <properties>
@@ -16,7 +16,7 @@
 
     <!-- Project-specific properties -->
     <exec.mainClass>com.google.sps.ServerMain</exec.mainClass>
-    <googleCloudProjectId>SPS-team4</googleCloudProjectId>
+    <googleCloudProjectId>summer21-sps-4</googleCloudProjectId>
   </properties>
 
   <dependencies>

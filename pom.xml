@@ -61,6 +61,23 @@
         <version>1.13.1</version>
     </dependency>
 
+
+    <!--Jackon Core and Databind for Json Operations-->
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>2.12.3</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.12.3</version>
+    </dependency>
+
+
   </dependencies>
 
   
@@ -82,6 +99,13 @@
               </outputDirectory>
               <resources>
                 <resource><directory>./src/main/webapp</directory></resource>
+                <!--Inlcludes the static credential file-->
+                <resource>
+                    <directory>src/main/resources</directory>
+                    <includes>
+                        <include>src/main/resources/client_secret.json</include>
+                    </includes>
+                </resource>
               </resources>
             </configuration>
           </execution>

@@ -1,3 +1,15 @@
+#createEvent {
+    font-size: 18px;
+    background-color: lightblue;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+#createEvent:hover, #createEvent:focus {
+    text-decoration: none;
+    cursor: pointer;
+}
+
 /* Modal Class */
 .modal {
     display: none; /* Not shown until button is clicked */
@@ -88,4 +100,9 @@ input[type = "submit"] {
     float: right;
     background-color: lightblue;
     border-radius: 10px;
+}
+
+input[type = "submit"]:hover, input[type = "submit"]:focus {
+    text-decoration: none;
+    cursor: pointer;
 }

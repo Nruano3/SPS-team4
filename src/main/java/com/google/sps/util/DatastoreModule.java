@@ -5,6 +5,7 @@ import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Key;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class DatastoreModule {
@@ -15,7 +16,7 @@ public class DatastoreModule {
 
     public static void init(){
 
-        dataStore = DatastoreOptions.getDefaultInstance().getService();
+        if(dataStore == null) dataStore = DatastoreOptions.getDefaultInstance().getService();
     }
 
 
@@ -94,5 +95,26 @@ public class DatastoreModule {
 
     public static void updateData(String userId, JsonObject data){
         //TODO update user information
+    }
+
+    public static String getUserProfileData(String profileId){
+
+        
+        KeyFactory keyFactory = dataStore.newKeyFactory().setKind("UserProfile");
+        Entity userProfile = dataStore.get(keyFactory.newKey(profileId));
+        keyFactory = dataStore.newKeyFactory().setKind("UserCredentials");
+        Entity userCredentials = dataStore.get(keyFactory.newKey(profileId));
+       
+        UserInfo userInfo = new UserInfo();
+
+        userInfo.setFirstName(userProfile.getString("given_name"));
+        userInfo.setLastName(userProfile.getString("family_name"));
+        userInfo.setUserName(userProfile.getString("name"));
+        userInfo.setProfileId(userProfile.getString("id"));
+        userInfo.setAccess_token(userCredentials.getString("access_token"));
+
+        String returnJson = new Gson().toJson(userInfo);
+       
+        return returnJson;
     }
 }

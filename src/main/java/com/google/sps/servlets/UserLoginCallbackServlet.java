@@ -90,7 +90,10 @@ public class UserLoginCallbackServlet extends HttpServlet {
          * database set session attribute for user id return to main user content page
          */
         JsonObject userCredentials = requestToken(req, res);
-        JsonObject userInfo = requestUserInfo(userCredentials.get("access_token").toString().replaceAll("\"", ""));
+       
+        String userAccess_token = userCredentials.get("access_token").toString().replaceAll("\"", "");
+        JsonObject userInfo = requestUserInfo(userAccess_token);
+    
         String profileId = userInfo.get("id").toString().replaceAll("\"", "");
 
         if(!DatastoreModule.isUserInDatastore(profileId)) {
@@ -98,10 +101,10 @@ public class UserLoginCallbackServlet extends HttpServlet {
             DatastoreModule.storeUserCredentials(userCredentials, profileId);
         }
 
-        req.getSession().setAttribute("User", profileId);
+        req.getSession().setAttribute("userId", profileId);
         req.getSession().setAttribute("access_token", userCredentials.get("access_token").toString().replaceAll("\"", ""));
 
-        res.sendRedirect(req.getContextPath() + "/Welcome.html");
+        res.sendRedirect(req.getContextPath() + "/index.html");
     }
 
     private void checkResponseForError(HttpServletRequest req, HttpServletResponse res) throws IOException {

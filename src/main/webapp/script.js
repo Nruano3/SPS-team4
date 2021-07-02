@@ -5,3 +5,13 @@ function launchmodal() {
 function closemodal() {
     document.getElementById("eventmodal").style.display = "none";
 } // Hides modal form when exit button is clicked
+
+
+async function getUserInfo(){
+    const responseFromServer = await fetch("/UserInfo");
+
+    const userInfoJson = await responseFromServer.json();
+
+    console.log(userInfoJson.userName);
+
+}

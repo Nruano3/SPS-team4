@@ -1,12 +1,24 @@
 package com.google.sps.servlets;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.zip.InflaterInputStream;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.*;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.sps.util.CredentialManager;
@@ -22,7 +34,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-
+import javax.xml.crypto.OctetStreamData;
 /**
  * LoginCallbackServlet: This servlet processes the response from the Google
  * Authorization request made from the UserLoginServlet. Start by checking to
@@ -49,7 +61,7 @@ public class UserLoginCallbackServlet extends HttpServlet {
     private static String TOKEN_REQ_URL;
     private static String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo?&access_token=";
     private static final int TESTING = 0;
-   // private static final int PRODUCTION = 1;
+    // private static final int PRODUCTION = 1;
     private static CloseableHttpClient HTTP_CLIENT;
 
     @Override
@@ -76,10 +88,75 @@ public class UserLoginCallbackServlet extends HttpServlet {
         HTTP_CLIENT = HttpClientBuilder.create().build();
     }
 
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws FileNotFoundException, IOException {
+
+        InputStream is = request.getInputStream(); 
+        
+        StringBuilder sb = new StringBuilder();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(is));
+        String inputLine = "";
+        while ((inputLine = in.readLine()) != null) {
+            sb.append(inputLine);
+        }
+        String authCode = sb.toString();
+        if (request.getHeader("X-Requested-With") == null) {
+        // Without the `X-Requested-With` header, this request could be forged. Aborts.
+            System.out.println("Error");
+             response.sendRedirect(request.getContextPath() + "/index.html");
+
+        }
+        
+         APP_CREDENTIALS = CredentialManager.setCredentials(CREDENTIALS_PATH);
+        // Set path to the Web application client_secret_*.json file you downloaded from the
+        // Google API Console: https://console.developers.google.com/apis/credentials
+        // You can also find your Web application client ID and client secret from the
+        // console and specify them directly when you create the GoogleAuthorizationCodeTokenRequest
+        // object.
+     
+
+       
+        // Exchange auth code for access token
+        System.out.println("AuthCode: " + authCode);
+        GoogleTokenResponse tokenResponse =
+                new GoogleAuthorizationCodeTokenRequest(
+                    new NetHttpTransport(),
+                    JacksonFactory.getDefaultInstance(),
+                    "https://oauth2.googleapis.com/token",
+                    APP_CREDENTIALS.getClient_id(),
+                   APP_CREDENTIALS.getClient_secret(),
+                    authCode,
+                    "postmessage")  // Specify the same redirect URI that you use with your web
+                                    // app. If you don't have a web version of your app, you can
+                                    // specify an empty string.
+                    .execute();
+
+        String accessToken = tokenResponse.getAccessToken();
+       
+
+        // Use access token to call API
+        GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
+
+        GoogleIdToken idToken = tokenResponse.parseIdToken();
+        GoogleIdToken.Payload payload = idToken.getPayload();
+        String userId = payload.getSubject();  // Use this value as a key to identify a user.
+        String email = payload.getEmail();
+        boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+        String name = (String) payload.get("name");
+        String pictureUrl = (String) payload.get("picture");
+        String locale = (String) payload.get("locale");
+        String familyName = (String) payload.get("family_name");
+        String givenName = (String) payload.get("given_name");
+
+        
+         response.sendRedirect(request.getContextPath() + "/index.html");
+    }
 
  //==================================== Main Service Funtion ==================================================//   
-    @Override
-    public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
+   // @Override
+    public void service4545(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         checkResponseForError(req, res);
 

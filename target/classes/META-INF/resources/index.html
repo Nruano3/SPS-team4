@@ -5,9 +5,26 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style.css">
         <title>SPS-team4</title>
+        <meta name="google-signin-client_id" content="569803275461-e4n2du96d1b8mps300gh834sr3es88j1.apps.googleusercontent.com">
         <script src="script.js"></script>
-        
-      
+       <!-- BEGIN Pre-requisites -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+        </script>
+        <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
+        </script>
+        <!-- END Pre-requisites -->
+            
+         <script>
+    function start() {
+      gapi.load('auth2', function() {
+        auth2 = gapi.auth2.init({
+          client_id: '569803275461-e4n2du96d1b8mps300gh834sr3es88j1.apps.googleusercontent.com',
+          redirect_uri: 'https://8080-cs-1084074782278-default.cs-us-west1-ijlt.cloudshell.dev/OAuth2Callback',
+          scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email '
+        });
+      });
+    }
+  </script>
         
     </head>
 <body >
@@ -17,6 +34,43 @@
             <div><p>We have a lot of work to do</p></div>
         </section>
 
+       <button id="signinButton">Sign in with Google</button>
+        <script>
+        $('#signinButton').click(function() {
+            // signInCallback defined in step 6.
+            
+            auth2.grantOfflineAccess('prompt').then(signInCallback);
+        });
+        </script>
+        <script>
+            function signInCallback(authResult) {
+            if (authResult['code']) {
+                console.log(authResult['code']);
+                // Hide the sign-in button now that the user is authorized, for example:
+                $('#signinButton').attr('style', 'display: none');
+
+                // Send the code to the server
+                $.ajax({
+                type: 'POST',
+                url: 'https://8080-cs-1084074782278-default.cs-us-west1-ijlt.cloudshell.dev/OAuth2Callback',
+                // Always include an `X-Requested-With` header in every AJAX request,
+                // to protect against CSRF attacks.
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+                    // Handle or verify the server response.
+                },
+                processData: false,
+                data: authResult['code']
+                });
+            } else {
+                // There was an error.
+                console.log("there was an error")
+            }
+            }
+            </script>
         <!--Sample Login Button, change styles later-->
         <form action="/Login" method="POST">
         <!--Used for confirming Backend to Frontend communications-->

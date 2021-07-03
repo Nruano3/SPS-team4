@@ -14,6 +14,8 @@ import com.google.sps.util.OAuth2Credentials;;
 @WebServlet("/UserInfo")
 public class UserInfoServlet extends HttpServlet {
 
+    
+    private static final long serialVersionUID = -9037868763675950246L;
     public static OAuth2Credentials APP_CREDENTIALS;
     private static final String CREDENTIALS_PATH = "client_secret.json";
 
@@ -23,7 +25,6 @@ public class UserInfoServlet extends HttpServlet {
         try {
             setAppCredentials();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 
 import com.google.sps.util.CredentialManager;
 import com.google.sps.util.OAuth2Credentials;
-import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 
 /**
@@ -73,6 +72,7 @@ public class UserLoginServlet extends HttpServlet {
 
         //If no user is active, send redirect to authorization page
         res.sendRedirect(AUTH_URL);
+        
 
     }
 

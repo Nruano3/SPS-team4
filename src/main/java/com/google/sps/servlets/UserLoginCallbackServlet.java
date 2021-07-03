@@ -104,6 +104,8 @@ public class UserLoginCallbackServlet extends HttpServlet {
         req.getSession().setAttribute("userId", profileId);
         req.getSession().setAttribute("access_token", userCredentials.get("access_token").toString().replaceAll("\"", ""));
 
+       
+        
         res.sendRedirect(req.getContextPath() + "/index.html");
     }
 

@@ -11,7 +11,9 @@ async function getUserInfo(){
     const responseFromServer = await fetch("/UserInfo");
 
     const userInfoJson = await responseFromServer.json();
-
+  //  gapi.client.setToken({access_token:'\''+ userInfoJson.access_token + '\''})
+  //  gapi.auth.setToken({access_token:'\''+ userInfoJson.access_token + '\''})
     console.log(userInfoJson.userName);
+
 
 }

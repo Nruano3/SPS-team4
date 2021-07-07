@@ -2,19 +2,17 @@ package com.google.sps.servlets;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.zip.InflaterInputStream;
+
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+
 import com.google.api.client.googleapis.auth.oauth2.*;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -34,7 +32,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import javax.xml.crypto.OctetStreamData;
+
 /**
  * LoginCallbackServlet: This servlet processes the response from the Google
  * Authorization request made from the UserLoginServlet. Start by checking to
@@ -92,6 +90,7 @@ public class UserLoginCallbackServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
 
+        
         InputStream is = request.getInputStream(); 
         
         StringBuilder sb = new StringBuilder();
@@ -119,7 +118,6 @@ public class UserLoginCallbackServlet extends HttpServlet {
 
        
         // Exchange auth code for access token
-        System.out.println("AuthCode: " + authCode);
         GoogleTokenResponse tokenResponse =
                 new GoogleAuthorizationCodeTokenRequest(
                     new NetHttpTransport(),
@@ -151,7 +149,7 @@ public class UserLoginCallbackServlet extends HttpServlet {
         String givenName = (String) payload.get("given_name");
 
         
-         response.sendRedirect(request.getContextPath() + "/index.html");
+        //response.sendRedirect(request.getContextPath() + "/index.html");
     }
 
  //==================================== Main Service Funtion ==================================================//   

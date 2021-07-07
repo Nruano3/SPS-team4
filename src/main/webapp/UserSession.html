@@ -1,0 +1,104 @@
+
+    <section>
+            <h1>Welcome To SPS Summer of 2021 Team 4's WebApp</h1>
+            <div><p>We have a lot of work to do</p></div>
+        </section>
+
+        <div id="name">Name</div>
+        <button id="signOutButton" onclick="signOut()">Sign Out</button>
+      
+        <!--Sample Login Button, change styles later-->
+       
+        <!--Used for confirming Backend to Frontend communications-->
+       
+
+        
+        <button onclick="listUpcomingEvents()">User Info</button>
+        <!-- Open the modal for creating an event -->
+        <button id = "createEvent" onclick = launchmodal()>Create Event</button>
+        <div id="content"></div>
+
+        <!-- Create New Event Modal -->
+        <div id = "eventmodal" class = "modal">
+            <div class = "modal-content">
+                <span id = "modalclose" onclick = closemodal()>&times;</span>
+                <p id = "eventcreator">Schedule New Event</p>
+                <form action = "/schedule-event" method="POST">
+
+                    <label for = "title-input">Event Title<span class = "required">*</span>:</label>
+                    <input type = "text" id = "title-input" placeholder = "Event Title" required oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                    <br/>
+
+                    <div id = "formcontainer">
+
+                        <div id = "leftform">
+                            <label for = "start-date-input">Start Date<span class = "required">*</span>:</label>
+                            <input type = "text" id = "start-date-input" placeholder = "Start Date" onfocus="(this.type='date')" onblur="(this.type='text')" required oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                            <br/>
+                            <label for = "early-time-input">Earliest Start Time<span class = "required">*</span>:</label>
+                            <input type  ="text" id = "early-time-input" placeholder = "Earliest Start Time" onfocus="(this.type='time')" onblur="(this.type='text')" required oninvalid = "this.setCustomValidity('Please fill in this field to   create the event')" onvalid = "this.setCustomValidity('')"></input>
+                            <br/>
+
+                            <label for = "hour-input">Duration<span class = "required">*</span>:</label>
+                            <select id = "hour-input" required oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid="this.setCustomValidity('')">
+                                <option value = "" disabled selected>hours</option>
+                                <option value = 0>0</option>
+                                <option value = 1>1</option>
+                                <option value = 2>2</option>
+                                <option value = 3>3</option>
+                                <option value = 4>4</option>
+                                <option value = 5>5</option>
+                                <option value = 6>6</option>
+                                <option value = 7>7</option>
+                                <option value = 8>8</option>
+                                <option value = 9>9</option>
+                                <option value = 10>10</option>
+                                <option value = 11>11</option>
+                                <option value = 12>12</option>
+                                <option value = 13>13</option>
+                                <option value = 14>14</option>
+                                <option value = 15>15</option>
+                                <option value = 16>16</option>
+                                <option value = 17>17</option>
+                                <option value = 18>18</option>
+                                <option value = 19>19</option>
+                                <option value = 20>20</option>
+                                <option value = 21>21</option>
+                                <option value = 22>22</option>
+                                <option value = 23>23</option>
+                                <option value = 24>24</option>
+                            </select>
+                            <select id = "min-input" placeholder = "minutes" required oninvalid = "this.setCustomValidity('Please fill  in this field to create the event')" onvalid="this.setCustomValidity('')">
+                                <option value = "" disabled selected>minutes</option>
+                                <option value = 0>0</option>
+                                <option value = 15>15</option>
+                                <option value = 30>30</option>
+                                <option value = 45>45</option>
+                            </select>
+                        </div>
+
+                        <div id = "rightform">
+                            <label for = "end-date-input">End Date<span class = "required">*</span>:</label>
+                            <input type = "text" id = "end-date-input" placeholder = "End Date" onfocus="(this.type='date')" onblur="(this.type='text')" required oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                            <br/>
+                            <label for = "late-time-input">Latest Start Time<span class = "required">*</span>:</label>
+                            <input type = "text" id = "late-time-input" placeholder = "Latest Start Time" onfocus="(this.type='time')" onblur="(this.type='text')" required oninvalid="this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                            <br/><br/>
+                            <label for = "color-input">Color<span class = "required">*</span>:</label>
+                            <input type = "color" id = "color-input" required oninvalid="this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                        </div>
+
+                    </div>
+                    
+                    <br/>
+                    <label for = "invitees-input">Invitees<span class = "required">*</span>:</label>
+                    <input type = "text" id = "invitees-input" placeholder = "emails separated by commas" required oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                    <br/>
+                    <p class = "required">* required section</p>
+                    <input type = "submit" value = "Save"/>
+                    <br/>
+                    <br/>
+                </form> <!-- Event form -->
+            </div>
+
+        </div>

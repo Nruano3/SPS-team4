@@ -33,7 +33,7 @@ public class DatastoreModule {
          /**
          * userInfo json contains the following:
          * 
-        *  "id": "113591704021226668726",
+        *  "id": "54135165135843153543",
            "name": "Ryan Anderson",
            "given_name": "Ryan",
            "family_name": "Anderson",
@@ -47,15 +47,32 @@ public class DatastoreModule {
         */
 
         KeyFactory keyFactory = dataStore.newKeyFactory().setKind("UserProfile");
-
-        Entity userEntity = Entity.newBuilder(keyFactory.newKey(userInfo.get("id").toString().replaceAll(quotes,"")))
-                                      .set("id", userInfo.get("id").toString().replaceAll(quotes,""))
-                                      .set("name", userInfo.get("name").toString().replaceAll(quotes,""))
-                                      .set("given_name", userInfo.get("given_name").toString().replaceAll(quotes,""))
-                                      .set("family_name", userInfo.get("family_name").toString().replaceAll(quotes,""))
-                                      .set("picture", userInfo.get("picture").toString().replaceAll(quotes,""))
-                                      .build();
-        dataStore.add(userEntity);
+        if(dataStore.get(keyFactory.newKey(userInfo.get("id").toString().replaceAll(quotes,""))) == null){
+            Entity userEntity;
+            if(userInfo.has("email")){
+                userEntity = Entity.newBuilder(keyFactory.newKey(userInfo.get("id").toString().replaceAll(quotes,"")))
+                                        .set("id", userInfo.get("id").toString().replaceAll(quotes,""))
+                                        .set("name", userInfo.get("name").toString().replaceAll(quotes,""))
+                                        .set("given_name", userInfo.get("given_name").toString().replaceAll(quotes,""))
+                                        .set("family_name", userInfo.get("family_name").toString().replaceAll(quotes,""))
+                                        .set("picture", userInfo.get("picture").toString().replaceAll(quotes,""))
+                                        .set("locale", userInfo.get("locale").toString().replaceAll("\"", ""))
+                                        .set("email", userInfo.get("email").toString().replaceAll("\"", ""))
+                                        .build();
+            }
+            else{
+                userEntity = Entity.newBuilder(keyFactory.newKey(userInfo.get("id").toString().replaceAll(quotes,"")))
+                                        .set("id", userInfo.get("id").toString().replaceAll(quotes,""))
+                                        .set("name", userInfo.get("name").toString().replaceAll(quotes,""))
+                                        .set("given_name", userInfo.get("given_name").toString().replaceAll(quotes,""))
+                                        .set("family_name", userInfo.get("family_name").toString().replaceAll(quotes,""))
+                                        .set("picture", userInfo.get("picture").toString().replaceAll(quotes,""))
+                                        .set("locale", userInfo.get("locale").toString().replaceAll("\"", ""))
+                                        .build();
+            }
+            dataStore.add(userEntity);
+        }
+        
         return;
 
     }
@@ -72,10 +89,11 @@ public class DatastoreModule {
          *  "expires_in": "expiration in seconds"
          * }
          */
+        
         KeyFactory keyFactory = dataStore.newKeyFactory().setKind("UserCredentials");
         long timeStampInSeconds = System.currentTimeMillis() /1000;
-
-        Entity credentialEntity = Entity.newBuilder(keyFactory.newKey(profileId))
+        if(dataStore.get(keyFactory.newKey(profileId)) == null){
+            Entity credentialEntity = Entity.newBuilder(keyFactory.newKey(profileId))
                 .set("timestamp", timeStampInSeconds)
                 .set("id", profileId)
                 .set("access_token", userCredentials.get("access_token").toString().replaceAll(quotes,""))
@@ -86,7 +104,9 @@ public class DatastoreModule {
                 .set("id_token", userCredentials.get("id_token").toString().replaceAll(quotes,""))
                 .build();
 
-        dataStore.add(credentialEntity);
+            dataStore.add(credentialEntity);
+        }
+        
     }
 
     public static void updateData(String userId, String field, String data){

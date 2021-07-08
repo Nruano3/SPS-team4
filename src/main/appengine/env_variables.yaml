@@ -1,7 +1,2 @@
-runtime: java11
-
-includes:
-  env_variables.yaml
-
 env_variables:
   GOOGLE_API_KEY='AIzaSyDW5czqkKCAd-8ochRA3ZJulL2mrBMDwDI'

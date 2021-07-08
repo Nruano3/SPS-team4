@@ -92,7 +92,7 @@ function signInCallback(authResult) {
 	    // Send the code to the server
 	    $.ajax({
 	        type: 'POST',
-	        url: 'https://8080-cs-1084074782278-default.cs-us-west1-ijlt.cloudshell.dev/OAuth2Callback',
+	        url: 'https://8080-cs-1084074782278-default.cs-us-west1-ijlt.cloudshell.dev/GAuthCallback',
 	        // Always include an `X-Requested-With` header in every AJAX request,
 	        // to protect against CSRF attacks.
 	        headers: {

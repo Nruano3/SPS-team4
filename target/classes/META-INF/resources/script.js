@@ -58,7 +58,7 @@ async function loadGapi(){
 async function auth2Init(){
 	gapi.auth2.init({
 		client_id: sessionStorage.CLIENT,
-		scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+		scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar',
         cookiepolicy: 'single_host_origin'
 	}).then(function(AUTH2){
         document.getElementById('signinButton1').onclick = function() {             
@@ -73,7 +73,7 @@ async function auth2Init(){
 function clientInit(){
 	gapi.client.init({
 		client_id: sessionStorage.CLIENT,
-		scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+		scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar',
 		cookiepolicy: 'single_host_origin'
 	})
 }
@@ -243,9 +243,21 @@ function resetSession(){
         post.appendChild(textContent);
         pre.appendChild(post);
 }
-      
+
+function httpGet()
+{   
+    var theUrl = 'https://www.googleapis.com/calendar/v3/calendars/anderson94@mail.fresnostate.edu/events?key=' + sessionStorage.API_KEY;
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+//https://www.googleapis.com/calendar/v3/calendars/<CALENDAR_EMAIL>/events?key=
 function listUpcomingEvents() {
         gapi.client.load('calendar', 'v3', function() {
+            
+
             gapi.client.calendar.events.list({
                 'calendarId': 'primary',
                 'timeMin': (new Date()).toISOString(),
@@ -271,5 +283,3 @@ function listUpcomingEvents() {
             });
         });
 }
-
-

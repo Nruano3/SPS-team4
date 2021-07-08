@@ -114,38 +114,44 @@ function signInCallback(authResult) {
 }
 
 async function onLoginSuccess(){
-    
-    const auth2 = await gapi.auth2.getAuthInstance();
-    if(await auth2.isSignedIn.get()){
-        var user = await auth2.currentUser.get();
-        
-        var profile = await user.getBasicProfile();
+    try{
 
-        if(!profile){
+    
+        const auth2 = await gapi.auth2.getAuthInstance();
+        if(await auth2.isSignedIn.get()){
+            var user = await auth2.currentUser.get();
             
-            await auth2.signIn()
-            user = await auth2.currentUser.get();
-            profile = await user.getBasicProfile();            
-        }
-    
-        //Store useful information from the user
-        sessionStorage.id_token = await user.getAuthResponse().id_token;
-        sessionStorage.access_token = await user.getAuthResponse().access_token;
-        
-                
-        //Finish Sign-in process
-        loadUserData(); 
-        return;
-    }else {//=================================================================This may need to be Fixed=============================================================
-        var options = new gapi.auth2.SigninOptionsBuilder();
-        options.setPrompt('none');
-        await auth2.signIn(options)
-        onLoginSuccess();
+            var profile = await user.getBasicProfile();
 
+            if(!profile){
+                
+                await auth2.signIn()
+                user = await auth2.currentUser.get();
+                profile = await user.getBasicProfile();            
+            }
+        
+            //Store useful information from the user
+            sessionStorage.id_token = await user.getAuthResponse().id_token;
+            sessionStorage.access_token = await user.getAuthResponse().access_token;
+            
+                    
+            //Finish Sign-in process
+            loadUserData(); 
+            return;
+        }else {//=================================================================This may need to be Fixed=============================================================
+            var options = new gapi.auth2.SigninOptionsBuilder();
+            
+            options.setPrompt('none');
+            
+            await auth2.signIn(options)
+            onLoginSuccess();
+
+        }
+        
+    } catch (err) {
+        alert("Please Try Logging In again");
+        window.location.reload();
     }
-    
-    window.location.reload();
-    return;
 }
 
 async function loadUserData() {

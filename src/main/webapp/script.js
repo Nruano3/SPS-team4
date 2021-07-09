@@ -120,10 +120,10 @@ async function auth2Init(){
 		scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar',
         cookiepolicy: 'single_host_origin'
 	}).then(function(AUTH2){
-        document.getElementById('signinButton1').onclick = function() {             
+        document.getElementById('signInButton').onclick = function() {             
             AUTH2.grantOfflineAccess().then(signInCallback);          
         }
-        $('#signinButton1').attr('style', 'display: block');
+        $('#signInButton').attr('style', 'display: grid');
     });
 	
 }
@@ -144,8 +144,8 @@ function signInCallback(authResult) {
 	if (authResult['code']) {
                
 	    // Hide the sign-in button now that the user is authorized, for example:
-        $('#signinButton1').attr('style', 'display: none');
-        $('#signOutButton').attr('style', 'display: block');
+        $('#signInButton').attr('style', 'display: none');
+        $('#signOutButton').attr('style', 'display: grid');
        
 
 	    // Send the code to the server
@@ -264,8 +264,8 @@ async function displayUserData(user){
     $('#signOutButton').click(function() {
         signOut();
     });
-    $('#signinButton1').attr('style', 'display: none');
-    $('#signOutButton').attr('style', 'display: block');
+    $('#signInButton').attr('style', 'display: none');
+    $('#signOutButton').attr('style', 'display: grid');
 }
 
 //Effectively signs out user from site
@@ -278,8 +278,8 @@ async function signOut() {
         await loadGapi();
         await sessionStorage.clear();     
         $('#content').attr('style', 'display: none');
-        $('#signinButton1').attr('style', 'display: none');
-        $('#signOut').attr('style', 'display: block');
+        $('#signInButton').attr('style', 'display: grid');
+        $('#signOutButton').attr('style', 'display: none');
     });
         
 

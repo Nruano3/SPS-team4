@@ -273,6 +273,8 @@ async function displayUserData(user){
             //window.location.reload();
     }    
     //Display in document
+
+    populateCalendar();
    
     $('#userContent').attr('style', 'display: grid');
      document.getElementById('userImg').src = profile.getImageUrl();
@@ -343,7 +345,7 @@ function listUpcomingEvents() {
                 'orderBy': 'startTime'
             }).then(function(response){
                 var events = response.result.items;
-                appendPre('Upcomming Events: \n\n');
+                appendEvent('Upcomming Events: \n\n');
                 if (events.length > 0) {
                     for (i = 0; i < events.length; i++) {
                     var event = events[i];
@@ -351,14 +353,61 @@ function listUpcomingEvents() {
                     if (!when) {
                         when = event.start.date;
                     }
-                    appendPre(event.summary + ' (' + when + ')')
+                    appendEvent(event.summary + ' (' + when + ')')
                     }
                 } else {
-                    appendPre('No upcoming events found.');
+                    appendEvent('No upcoming events found.');
                 }
             });
         });
 }
 
+var dayOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+var colorids = ['#000000', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#000000', '#616161', '#3f51b5', '#0b8043', '#d60000', '#039be5']
+
+function populateCalendar() {
+        gapi.client.load('calendar', 'v3', function() {
+            
+
+            gapi.client.calendar.events.list({
+                'calendarId': 'primary',
+                'timeMin': (new Date('June 28, 2021 00:00:00')).toISOString(),
+                'timeMax': (new Date('July 5, 2021 00:00:00')).toISOString(),
+                'showDeleted': false,
+                'singleEvents': true,
+                'orderBy': 'startTime'
+            }).then(function(response){
+                var events = response.result.items;
+                if (events.length > 0) {
+                    for (i = 0; i < events.length; i++) {
+                    var event = events[i];
+                    var when = event.start.dateTime;
+                    if (!when) {
+                        when = event.start.date;
+                    }
+                    var day = (new Date(event.start.dateTime)).getDay();
+                    var cid = event.colorId;
+                    if (isNaN(cid)) {
+                        cid = 12;
+                    }
+                    appendEvent(event.summary + ' (' + when + ')', dayOfWeek[day], colorids[cid]);
+                    }
+                }
+            });
+        });
+}
+
+function appendEvent(message, weekday, color) {
+        var pre = document.getElementById('event' + weekday);
+        var post = document.createElement("div");
+        post.style.backgroundColor = color;
+        post.style.border = "1px solid black";
+        post.style.borderRadius = "15px";
+        post.style.padding = "3px";
+        post.style.color = "white";
+        var textContent = document.createTextNode(message + '\r\n');
+        post.appendChild(textContent);
+        pre.appendChild(post);
+}
 
 

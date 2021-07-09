@@ -33,49 +33,49 @@
 }
 
 
-select option[value="1"] {
+select #lavender {
     
     background-color: #7986cb;  
 }
 
-select option[value="2"] {
+select #sage {
     
   background-color: #33b679;   
 }
 
-select option[value="3"] {
+select #grape {
     
   background-color: #8e24aa;  
 }
 
-select option[value="4"] {
+select #flamingo {
   background-color: #e67c73;  
 }
 
-select option[value="5"] {
+select #banana {
 
   background-color: #f6c026;   
 }
 
-select option[value="6"] {
+select #tangerine {
 
   background-color: #f5511d;  
 }
-select option[value="8"] {
+select #graphite {
 
   background-color: #616161;  
 }
 
-select option[value="9"] {
+select #blueberry {
  
   background-color: #3f51b5;   
 }
 
-select option[value="10"] {
+select #basil {
 
   background-color: #0b8043;  
 }
-select option[value="11"] {
+select #tomato {
 
   background-color: #d60000;  
 }
@@ -100,7 +100,7 @@ select option[value="undefined"] {
 }
 
 .modal-content {
-    width: 50%;
+    width: 80%;
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
@@ -179,4 +179,39 @@ input[type = "submit"] {
 input[type = "submit"]:hover, input[type = "submit"]:focus {
     text-decoration: none;
     cursor: pointer;
+}
+
+/* Calendar Formatting */
+.calview {
+    grid-column: 1 / span 4;
+    /*grid-template-columns: repeat(3, 1fr);*/
+}
+
+#calendar {
+    width: 100%;
+    border: solid 2px;
+    border-radius: 20px;
+}
+
+#month {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.arrows {
+    width: 3%;
+}
+
+#dates {
+    width: 100%;
+}
+
+.datemarker {
+    border-bottom: solid 1px;
+    width: 13%;
+}
+
+table td {
+    vertical-align: top;
 }

@@ -1,2 +1,10 @@
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/HelloWorldServlet.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/util/OAuth2Credentials.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/util/UserInfo.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/util/DatastoreModule.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/util/Json.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/UserLoginServlet.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/UserInfoServlet.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/util/CredentialManager.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/UserLoginCallbackServlet.java
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/ServerMain.java

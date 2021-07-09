@@ -1,5 +1,6 @@
 package com.google.sps.servlets;
 
+
 import java.io.IOException;
 
 import javax.servlet.annotation.WebServlet;
@@ -49,7 +50,7 @@ public class UserLoginCallbackServlet extends HttpServlet {
     private static String TOKEN_REQ_URL;
     private static String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo?&access_token=";
     private static final int TESTING = 0;
-   // private static final int PRODUCTION = 1;
+    // private static final int PRODUCTION = 1;
     private static CloseableHttpClient HTTP_CLIENT;
 
     @Override
@@ -78,7 +79,7 @@ public class UserLoginCallbackServlet extends HttpServlet {
 
 
  //==================================== Main Service Funtion ==================================================//   
-    @Override
+   // @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         checkResponseForError(req, res);
@@ -104,6 +105,8 @@ public class UserLoginCallbackServlet extends HttpServlet {
         req.getSession().setAttribute("userId", profileId);
         req.getSession().setAttribute("access_token", userCredentials.get("access_token").toString().replaceAll("\"", ""));
 
+       
+        
         res.sendRedirect(req.getContextPath() + "/index.html");
     }
 

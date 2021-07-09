@@ -1,6 +1,28 @@
+
+:root {
+    --primary-color: lightblue;
+    --secondary-color: rgb(199, 199, 199);
+
+    --light: rgb(96, 187, 214);
+    --dark: rgb(46, 92, 105);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    /*allows us to add padding and borders without adding width to the element*/
+    padding: 0;
+    margin: 0;
+}
+
+
+
+
 #createEvent {
     font-size: 18px;
     background-color: lightblue;
+    color: #333;
+    padding: 10px;
     border-radius: 10px;
     border: 1px solid black;
 }
@@ -8,6 +30,58 @@
 #createEvent:hover, #createEvent:focus {
     text-decoration: none;
     cursor: pointer;
+}
+
+
+select option[value="1"] {
+    
+    background-color: #7986cb;  
+}
+
+select option[value="2"] {
+    
+  background-color: #33b679;   
+}
+
+select option[value="3"] {
+    
+  background-color: #8e24aa;  
+}
+
+select option[value="4"] {
+  background-color: #e67c73;  
+}
+
+select option[value="5"] {
+
+  background-color: #f6c026;   
+}
+
+select option[value="6"] {
+
+  background-color: #f5511d;  
+}
+select option[value="8"] {
+
+  background-color: #616161;  
+}
+
+select option[value="9"] {
+ 
+  background-color: #3f51b5;   
+}
+
+select option[value="10"] {
+
+  background-color: #0b8043;  
+}
+select option[value="11"] {
+
+  background-color: #d60000;  
+}
+select option[value="undefined"] {
+
+  background-color: #039be5;  
 }
 
 /* Modal Class */

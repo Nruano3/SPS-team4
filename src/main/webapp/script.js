@@ -69,6 +69,9 @@ async function createEvent(event){
         })
         
     });
+
+    alert("Your event has been submitted and will be added to your calendar."); //alerts user that form is submitted
+    closemodal(); //closes modal
     
 }
 

@@ -8,11 +8,17 @@ function closemodal() {
 
 
 function createNewEvent(){
-    
     launchmodal();
 }
 
-async function getEventData(event){
+/**
+ * 
+ * @param event
+ * createEvent takes all the data from the fields contained within the event modal
+ * and translates them into an event json, then uses that json to create
+ * an event with the Calendar API 
+ */
+async function createEvent(event){
     event.preventDefault();
    
     var endTime = new Date(document.getElementById("start-date-input").value + "T" + document.getElementById("late-time-input").value + ":00-07:00");
@@ -69,7 +75,7 @@ async function getEventData(event){
 var eventForm = document.getElementById("eventForm");
 
 if(eventForm){
-    eventForm.addEventListener("submit", getEventData, true);
+    eventForm.addEventListener("submit", createEvent, true);
 }
 
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -286,6 +292,7 @@ async function signOut() {
         await loadGapi();
         await sessionStorage.clear();     
         $('#content').attr('style', 'display: none');
+        $('#userContent').attr('style', 'display: none');
         $('#signInButton').attr('style', 'display: grid');
         $('#signOutButton').attr('style', 'display: none');
     });

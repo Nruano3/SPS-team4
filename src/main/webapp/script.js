@@ -7,6 +7,71 @@ function closemodal() {
 } // Hides modal form when exit button is clicked
 
 
+function createNewEvent(){
+    
+    launchmodal();
+}
+
+async function getEventData(event){
+    event.preventDefault();
+   
+    var endTime = new Date(document.getElementById("start-date-input").value + "T" + document.getElementById("late-time-input").value + ":00-07:00");
+    var hour =  Number(document.getElementById("hour-input").value)
+    var minute = Number(document.getElementById("min-input").value)
+    endTime.setHours(endTime.getHours() + hour);
+    endTime.setMinutes(endTime.getMinutes() + minute); 
+    endTime = endTime.toISOString();
+
+    if(!gapi.auth2) loadGapi();
+    var authInstance = await gapi.auth2.getAuthInstance();  
+    var user = await authInstance.currentUser.get();
+    var profile = await user.getBasicProfile();
+
+    var event = {
+        'kind' : 'calendar#event',
+       'summary': await document.getElementById("title-input").value,
+       'colorId' : await document.getElementById("color-input").value,
+        'creator': {
+            'id': profile.getId(),
+            'email': profile.getEmail(),
+            'displayName': profile.getName(),
+            "self": true
+        },
+        'organizer': {
+            'id': profile.getId(),
+            'email': profile.getEmail(),
+            "displayName": await profile.getName(),
+            "self": true
+        },
+        'start': {
+            'dateTime': await document.getElementById("start-date-input").value + 'T' + await document.getElementById("early-time-input").value + ':00',
+            'timeZone': 'America/Los_Angeles'
+        },
+        'end': {
+            'dateTime': endTime,
+            'timeZone': "America/Los_Angeles"
+        }
+    }
+
+    gapi.client.load("calendar", "v3", function(){
+        var request = gapi.client.calendar.events.insert({
+            'calendarId': 'primary',
+            'resource': event
+        });
+        request.execute(function(event){
+            console.log("Event Created: " + event.htmlLink);
+        })
+        
+    });
+    
+}
+
+var eventForm = document.getElementById("eventForm");
+
+if(eventForm){
+    eventForm.addEventListener("submit", getEventData, true);
+}
+
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 var auth2;
 
@@ -61,10 +126,10 @@ async function auth2Init(){
 		scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar',
         cookiepolicy: 'single_host_origin'
 	}).then(function(AUTH2){
-        document.getElementById('signinButton1').onclick = function() {             
+        document.getElementById('signInButton').onclick = function() {             
             AUTH2.grantOfflineAccess().then(signInCallback);          
         }
-        $('#signinButton1').attr('style', 'display: block');
+        $('#signInButton').attr('style', 'display: grid');
     });
 	
 }
@@ -85,8 +150,8 @@ function signInCallback(authResult) {
 	if (authResult['code']) {
                
 	    // Hide the sign-in button now that the user is authorized, for example:
-        $('#signinButton1').attr('style', 'display: none');
-        $('#signOutButton').attr('style', 'display: block');
+        $('#signInButton').attr('style', 'display: none');
+        $('#signOutButton').attr('style', 'display: grid');
        
 
 	    // Send the code to the server
@@ -178,6 +243,7 @@ async function displayUserData(user){
         var authInstance = await gapi.auth2.getAuthInstance(); 
         user = await authInstance.currentUser.get();
     }
+
     var profile = await user.getBasicProfile();
     if(!profile){
         console.log("Not Profile");
@@ -198,14 +264,16 @@ async function displayUserData(user){
             //window.location.reload();
     }    
     //Display in document
-    $('#content').attr('style', 'display: block');
-    document.getElementById('name').innerText = "Signed in: " +
-            user.getBasicProfile().getName();
+   
+    $('#userContent').attr('style', 'display: grid');
+     document.getElementById('userImg').src = profile.getImageUrl();
+    document.getElementById('name').innerText = user.getBasicProfile().getName();
+    document.getElementById('email').innerText = user.getBasicProfile().getEmail();
     $('#signOutButton').click(function() {
         signOut();
     });
-    $('#signinButton1').attr('style', 'display: none');
-    $('#signOutButton').attr('style', 'display: block');
+    $('#signInButton').attr('style', 'display: none');
+    $('#signOutButton').attr('style', 'display: grid');
 }
 
 //Effectively signs out user from site
@@ -218,10 +286,8 @@ async function signOut() {
         await loadGapi();
         await sessionStorage.clear();     
         $('#content').attr('style', 'display: none');
-        $('#signinButton1').attr('style', 'display: none');
-        $('#signOut').attr('style', 'display: block');
-        
-        //window.location.reload();  
+        $('#signInButton').attr('style', 'display: grid');
+        $('#signOutButton').attr('style', 'display: none');
     });
         
 
@@ -283,3 +349,6 @@ function listUpcomingEvents() {
             });
         });
 }
+
+
+

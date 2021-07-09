@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-
+<html lang="en-US">
 <head>
     <meta lang="en-US">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/utility.css">
-
+    <link rel="stylesheet" href="css/userContent.css">
+    
     <title>SPS-team4</title>
     <meta name="google-signin-client_id"
         content="569803275461-e4n2du96d1b8mps300gh834sr3es88j1.apps.googleusercontent.com">
@@ -16,36 +17,43 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script src="https://apis.google.com/js/client:platform.js"></script>
     <script src="https://apis.google.com/js/api:client.js"></script>
-
-    <!--<script src="script.js"></script>  END Pre-requisites -->
-
-
-
 </head>
-
 <body>
-
-
+    
+    <!--Nav Bar-->
     <div class="navbar">
         <div class = "container flex">
             <h1>Meeting Manager</h1>
-            <button class="btn card grid grid-3" id="signInButton"><img src="Google__G__Logo.png"><strong>Sign in with Google</strong></button>
-            <button class="btn card grid grid-3" id="signOutButton"><img src="Google__G__Logo.png"><strong>Sign Out</strong></button>
+            <button class="btn card grid grid-3" id="signInButton"><img src="Google__G__Logo.png"><p><strong>Sign in with Google</strong></p></button>
+            <button class="btn card grid grid-3" id="signOutButton"><img src="Google__G__Logo.png"><p><strong>Sign Out</strong></p></button>
         </div>
     </div>
-    
 
-    <div id="content" style="display: none">
+    <!--Login Screen Content-->
+    <div id="loginContent">
+        <div class = "container grid">
 
-    <div id="name">Name</div>
-    
+        </div>
+    </div>
 
-    <button class="btn" onclick="listUpcomingEvents()">User Info</button>
-    <!-- Open the modal for creating an event -->
-    <button id="createEvent" class="btn" onclick=launchmodal()>Create Event</button>
-    <div id="eventContent"></div>
+    <div id="userContent" class="userContent">
+        <div class="container grid grid-4 card">
+            <div class="profile">
+                <div class="card">
+                    <img id="userImg" src="">
+                    <h4 id="name"></h4>
+                    <h5 id="email"></h5>
+                </div>
+            </div>
 
-    <!-- Create New Event Modal -->
+            <div class="userNav card">
+                <ul>
+                    <li><a href="#" onclick="createNewAutoEvent()">New Auto Event</a></li>
+                    <li><a href="#" onclick="createNewEvent()">New Regular Event</a></li>
+                    <li><a href="#" onclick="setActiveCalendars()">Set Active Calendar(s)</a></li>
+                </ul>
+            </div>
+            
     <div id="eventmodal" class="modal">
         <div class="modal-content">
             <span id="modalclose" onclick=closemodal()>&times;</span>
@@ -161,14 +169,12 @@
                 </form> <!-- Event form -->
             </div>
 
-        </div>
+    </div>            
     </div>
-    <div id="signOut" style="display: none">
-        <h1>Signed Out</h1>
     </div>
-    <!--Moved Script Here so it can "find" the form to perfrom the appropriate function upon sumbital-->
+
+    <div id="signOutContent"></div>
     <script src="script.js"></script>
     <script>start()</script>
 </body>
-
 </html>

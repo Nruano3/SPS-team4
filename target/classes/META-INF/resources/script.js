@@ -6,6 +6,12 @@ function closemodal() {
     document.getElementById("eventmodal").style.display = "none";
 } // Hides modal form when exit button is clicked
 
+
+function createNewEvent(){
+    
+    launchmodal();
+}
+
 async function getEventData(event){
     event.preventDefault();
    
@@ -258,9 +264,11 @@ async function displayUserData(user){
             //window.location.reload();
     }    
     //Display in document
-    $('#content').attr('style', 'display: block');
-    document.getElementById('name').innerText = "Signed in: " +
-            user.getBasicProfile().getName();
+   
+    $('#userContent').attr('style', 'display: grid');
+     document.getElementById('userImg').src = profile.getImageUrl();
+    document.getElementById('name').innerText = user.getBasicProfile().getName();
+    document.getElementById('email').innerText = user.getBasicProfile().getEmail();
     $('#signOutButton').click(function() {
         signOut();
     });

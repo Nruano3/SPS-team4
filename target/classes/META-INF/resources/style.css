@@ -10,6 +10,58 @@
     cursor: pointer;
 }
 
+
+select option[value="1"] {
+    
+    background-color: #7986cb;  
+}
+
+select option[value="2"] {
+    
+  background-color: #33b679;   
+}
+
+select option[value="3"] {
+    
+  background-color: #8e24aa;  
+}
+
+select option[value="4"] {
+  background-color: #e67c73;  
+}
+
+select option[value="5"] {
+
+  background-color: #f6c026;   
+}
+
+select option[value="6"] {
+
+  background-color: #f5511d;  
+}
+select option[value="8"] {
+
+  background-color: #616161;  
+}
+
+select option[value="9"] {
+ 
+  background-color: #3f51b5;   
+}
+
+select option[value="10"] {
+
+  background-color: #0b8043;  
+}
+select option[value="11"] {
+
+  background-color: #d60000;  
+}
+select option[value="undefined"] {
+
+  background-color: #039be5;  
+}
+
 /* Modal Class */
 .modal {
     display: none; /* Not shown until button is clicked */

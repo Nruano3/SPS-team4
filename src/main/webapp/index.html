@@ -11,7 +11,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script src="https://apis.google.com/js/client:platform.js"></script>
         <script src="https://apis.google.com/js/api:client.js"></script>        
-        <script src="script.js"></script>
+       
        <!--<script src="script.js"></script>  END Pre-requisites -->
             
      
@@ -56,7 +56,6 @@
 
             
             <button onclick="listUpcomingEvents()">User Info</button>
-            <button onclick="execute()">Get Calendars</button>
             <!-- Open the modal for creating an event -->
             <button id = "createEvent" onclick = launchmodal()>Create Event</button>
             <div id="eventContent"></div>
@@ -65,25 +64,25 @@
             <div id = "eventmodal" class = "modal">
                 <div class = "modal-content">
                     <span id = "modalclose" onclick = closemodal()>&times;</span>
-                    <p id = "eventcreator">Schedule New Event</p>
-                    <form action = "/schedule-event" method="POST">
+                    <p >Schedule New Event</p>
+                    <form id = "eventForm" method="POST">
 
                         <label for = "title-input">Event Title<span class = "required">*</span>:</label>
-                        <input type = "text" id = "title-input" placeholder = "Event Title" required oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                        <input type = "text" id = "title-input" placeholder = "Event Title" oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
                         <br/>
 
                         <div id = "formcontainer">
 
                             <div id = "leftform">
                                 <label for = "start-date-input">Start Date<span class = "required">*</span>:</label>
-                                <input type = "text" id = "start-date-input" placeholder = "Start Date" onfocus="(this.type='date')" onblur="(this.type='text')" required oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                                <input type = "date" id = "start-date-input" placeholder = "Start Date" onfocus="(this.type='date')" onblur="(this.type='text')"  oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
                                 <br/>
                                 <label for = "early-time-input">Earliest Start Time<span class = "required">*</span>:</label>
-                                <input type  ="text" id = "early-time-input" placeholder = "Earliest Start Time" onfocus="(this.type='time')" onblur="(this.type='text')" required oninvalid = "this.setCustomValidity('Please fill in this field to   create the event')" onvalid = "this.setCustomValidity('')"></input>
+                                <input type  ="time" id = "early-time-input" placeholder = "Earliest Start Time" onfocus="(this.type='time')" onblur="(this.type='text')"  oninvalid = "this.setCustomValidity('Please fill in this field to   create the event')" onvalid = "this.setCustomValidity('')"></input>
                                 <br/>
 
                                 <label for = "hour-input">Duration<span class = "required">*</span>:</label>
-                                <select id = "hour-input" required oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid="this.setCustomValidity('')">
+                                <select id = "hour-input"  oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid="this.setCustomValidity('')">
                                     <option value = "" disabled selected>hours</option>
                                     <option value = 0>0</option>
                                     <option value = 1>1</option>
@@ -111,7 +110,7 @@
                                     <option value = 23>23</option>
                                     <option value = 24>24</option>
                                 </select>
-                                <select id = "min-input" placeholder = "minutes" required oninvalid = "this.setCustomValidity('Please fill  in this field to create the event')" onvalid="this.setCustomValidity('')">
+                                <select id = "min-input" placeholder = "minutes"  oninvalid = "this.setCustomValidity('Please fill  in this field to create the event')" onvalid="this.setCustomValidity('')">
                                     <option value = "" disabled selected>minutes</option>
                                     <option value = 0>0</option>
                                     <option value = 15>15</option>
@@ -122,23 +121,36 @@
 
                             <div id = "rightform">
                                 <label for = "end-date-input">End Date<span class = "required">*</span>:</label>
-                                <input type = "text" id = "end-date-input" placeholder = "End Date" onfocus="(this.type='date')" onblur="(this.type='text')" required oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                                <input type = "date" id = "end-date-input" placeholder = "End Date" onfocus="(this.type='date')" onblur="(this.type='text')"  oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
                                 <br/>
                                 <label for = "late-time-input">Latest Start Time<span class = "required">*</span>:</label>
-                                <input type = "text" id = "late-time-input" placeholder = "Latest Start Time" onfocus="(this.type='time')" onblur="(this.type='text')" required oninvalid="this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                                <input type = "time" id = "late-time-input" placeholder = "Latest Start Time" onfocus="(this.type='time')" onblur="(this.type='text')"  oninvalid="this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
                                 <br/><br/>
                                 <label for = "color-input">Color<span class = "required">*</span>:</label>
-                                <input type = "color" id = "color-input" required oninvalid="this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                                <select id = "color-input">
+                                        <option value = "undefined">Default</option>
+                                        <option value = "1">Lavender</option>
+                                        <option value = "2">Sage</option>
+                                        <option value = "3">Grape</option>
+                                        <option value = "4">Flamingo</option>
+                                        <option value = "5">Banana</option>
+                                        <option value = "6">Tangerine</option>
+                                        <option value = "8">Graphite</option>
+                                        <option value = "9">Blueberry</option>
+                                        <option value = "10">Basil</option>
+                                        <option value = "11">Tomato <span id="tomato"></span></option>
+                                </select>
+                             
                             </div>
 
                         </div>
                         
                         <br/>
                         <label for = "invitees-input">Invitees<span class = "required">*</span>:</label>
-                        <input type = "text" id = "invitees-input" placeholder = "emails separated by commas" required oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
+                        <input type = "text" id = "invitees-input" placeholder = "emails separated by commas"  oninvalid = "this.setCustomValidity('Please fill in this field to create the event')" onvalid = "this.setCustomValidity('')"></input>
                         <br/>
                         <p class = "required">* required section</p>
-                        <input type = "submit" value = "Save"/>
+                        <input type = "submit" value = "Save" />
                         <br/>
                         <br/>
                     </form> <!-- Event form -->
@@ -149,6 +161,8 @@
         <div id="signOut" style="display: none">
             <h1>Signed Out</h1>
         </div>
-       <script>start()</script>
+        <!--Moved Script Here so it can "find" the form to perfrom the appropriate function upon sumbital-->
+        <script src="script.js"></script>
+        <script>start()</script>
 </body>
 </html>

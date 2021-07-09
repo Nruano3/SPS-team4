@@ -6,6 +6,65 @@ function closemodal() {
     document.getElementById("eventmodal").style.display = "none";
 } // Hides modal form when exit button is clicked
 
+async function getEventData(event){
+    event.preventDefault();
+   
+    var endTime = new Date(document.getElementById("start-date-input").value + "T" + document.getElementById("late-time-input").value + ":00-07:00");
+    var hour =  Number(document.getElementById("hour-input").value)
+    var minute = Number(document.getElementById("min-input").value)
+    endTime.setHours(endTime.getHours() + hour);
+    endTime.setMinutes(endTime.getMinutes() + minute); 
+    endTime = endTime.toISOString();
+
+    if(!gapi.auth2) loadGapi();
+    var authInstance = await gapi.auth2.getAuthInstance();  
+    var user = await authInstance.currentUser.get();
+    var profile = await user.getBasicProfile();
+
+    var event = {
+        'kind' : 'calendar#event',
+       'summary': await document.getElementById("title-input").value,
+       'colorId' : await document.getElementById("color-input").value,
+        'creator': {
+            'id': profile.getId(),
+            'email': profile.getEmail(),
+            'displayName': profile.getName(),
+            "self": true
+        },
+        'organizer': {
+            'id': profile.getId(),
+            'email': profile.getEmail(),
+            "displayName": await profile.getName(),
+            "self": true
+        },
+        'start': {
+            'dateTime': await document.getElementById("start-date-input").value + 'T' + await document.getElementById("early-time-input").value + ':00',
+            'timeZone': 'America/Los_Angeles'
+        },
+        'end': {
+            'dateTime': endTime,
+            'timeZone': "America/Los_Angeles"
+        }
+    }
+
+    gapi.client.load("calendar", "v3", function(){
+        var request = gapi.client.calendar.events.insert({
+            'calendarId': 'primary',
+            'resource': event
+        });
+        request.execute(function(event){
+            console.log("Event Created: " + event.htmlLink);
+        })
+        
+    });
+    
+}
+
+var eventForm = document.getElementById("eventForm");
+
+if(eventForm){
+    eventForm.addEventListener("submit", getEventData, true);
+}
 
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 var auth2;
@@ -178,6 +237,7 @@ async function displayUserData(user){
         var authInstance = await gapi.auth2.getAuthInstance(); 
         user = await authInstance.currentUser.get();
     }
+
     var profile = await user.getBasicProfile();
     if(!profile){
         console.log("Not Profile");
@@ -220,8 +280,6 @@ async function signOut() {
         $('#content').attr('style', 'display: none');
         $('#signinButton1').attr('style', 'display: none');
         $('#signOut').attr('style', 'display: block');
-        
-        //window.location.reload();  
     });
         
 
@@ -283,3 +341,6 @@ function listUpcomingEvents() {
             });
         });
 }
+
+
+

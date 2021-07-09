@@ -54,7 +54,7 @@
     font-size: 17px;
     padding: 5px 0;
     margin-bottom: 5px;
-    border-bottom: 1px rgb(141, 141, 141) solid;
+    border-bottom: 2px rgb(141, 141, 141) solid;
 }
 
 .userContent .userNav li:hover {

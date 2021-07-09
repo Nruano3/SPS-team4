@@ -5,7 +5,7 @@
     cursor: pointer;
     background: var(--secondary-color);
     color: #333;
-    border: none;
+    border: 1px #333 solid;
     border-radius: 5px;
 }
 .btn:hover {

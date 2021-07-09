@@ -65,7 +65,7 @@
 
 .userContent .grid .event {
     margin: 20px;
-    background-color: var(--light);
+    background-color: var(--primary-color);
     border-radius: 10px;
     grid-column: 2 / span 3;
     grid-row: 1 / span 2;

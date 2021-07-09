@@ -38,22 +38,37 @@
 
     <div id="userContent" class="userContent">
         <div class="container grid grid-4 card">
-            <div class="profile">
-                <div class="card">
-                    <img id="userImg" src="">
-                    <h4 id="name"></h4>
-                    <h5 id="email"></h5>
-                </div>
+            <div class="profile card">
+                <img id="userImg" src="">
+                <h4 id="name"></h4>
+                <h5 id="email"></h5>
             </div>
 
             <div class="userNav card">
                 <ul>
                     <li><a href="#" onclick="createNewAutoEvent()">New Auto Event</a></li>
                     <li><a href="#" onclick="createNewEvent()">New Regular Event</a></li>
+                    <li><a href="#" onclick="addGroupMember()">Add Group Member</a></li>
                     <li><a href="#" onclick="setActiveCalendars()">Set Active Calendar(s)</a></li>
                 </ul>
             </div>
             
+            <div id="autoEventCard" class="event">
+                <div id="autoEventInit">
+                        <div class="card grid grid-2">
+                           <h2>Create New Auto Event</h2>
+                           <div class="userList"><h3 id="autoEventHeader">Enter Users by Email Address</h3>
+                                <input type="email" class="userEmail my-2" placeholder="example@gmail.com"></br>
+                                <button class="addUserByEmailButton btn">Add User</button>
+                           </div>
+                        </div>
+                </div>
+                <div id="autoEventFinal">
+                    <div class="card grid grid-2">
+                    
+                    </div>
+                </div>
+            </div>
     <div id="eventmodal" class="modal">
         <div class="modal-content">
             <span id="modalclose" onclick=closemodal()>&times;</span>

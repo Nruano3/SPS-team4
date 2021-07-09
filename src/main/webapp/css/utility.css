@@ -71,66 +71,66 @@
 
 /* Margins and Padding */
 .m-1 {
-    margin: 0.5 rem;
+    margin: 0.5rem;
 }
 
 .m-2 {
-    margin: 1 rem;
+    margin: 1rem;
 }
 
 .m-3 {
-    margin: 1.5 rem;
+    margin: 1.5rem;
 }
 
 .m-4 {
-    margin: 2 rem;
+    margin: 2rem;
 }
 
 .my-1 {
-    margin: 0 0.5 rem;
+    margin: 0.5rem 0;
 }
 
 .my-2 {
-    margin: 0 1 rem;
+    margin: 1rem 0;
 }
 
 .my-3 {
-    margin: 0 1.5 rem;
+    margin: 1.5rem 0;
 }
 
 .my-4 {
-    margin: 0 2 rem;
+    margin: 2rem 0;
 }
 
 .p-1 {
-    padding: 0.5 rem;
+    padding: 0.5rem;
 }
 .p-2 {
-    padding: 1 rem;
+    padding: 1rem;
 }
 
 .p-3 {
-    padding: 1.5 rem;
+    padding: 1.5rem;
 }
 
 .p-4 {
-    padding: 2 rem;
+    padding: 2rem;
 }
 
 .py-1 {
-    padding: 0 0.5 rem;
+    padding: 0.5rem 0;
 }
 
 .py-2 {
-    padding: 0 1 rem;
+    padding: 1rem 0;
 }
 
 .py-3 {
-    padding: 0 1.5 rem;
+    padding: 1.5rem 0;
 }
 
 .py-4 {
-    padding: 0 2 rem;
+    padding: 2rem 0;
 }
 
 

@@ -75,6 +75,7 @@ async function createEvent(event){
     
 }
 
+
 var eventForm = document.getElementById("eventForm");
 
 if(eventForm){
@@ -362,8 +363,9 @@ function listUpcomingEvents() {
         });
 }
 
-var dayOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-var colorids = ['#000000', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#000000', '#616161', '#3f51b5', '#0b8043', '#d60000', '#039be5']
+const dayOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+const colorids = ['#000000', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#000000', '#616161', '#3f51b5', '#0b8043', '#d60000', '#039be5']
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function populateCalendar() {
         gapi.client.load('calendar', 'v3', function() {
@@ -383,9 +385,9 @@ function populateCalendar() {
                     var event = events[i];
                     var when = event.start.dateTime;
                     if (!when) {
-                        when = event.start.date;
+                        when = new Date(event.start.date);
                     }
-                    var day = (new Date(event.start.dateTime)).getDay();
+                    var day = (new Date(when)).getDay();
                     var cid = event.colorId;
                     if (isNaN(cid)) {
                         cid = 12;
@@ -395,6 +397,44 @@ function populateCalendar() {
                 }
             });
         });
+}
+
+function getDateTimeStrings(start, end) {
+    var startDateTime = start.dateTime();
+    var endDateTime = end.dateTime();
+    if(!startDateTime || !endDateTime) {
+        var startMonth = months[start.date().getMonth()];
+        var startDay = start.date.getDate();
+        var endMonth = months[end.date().getMonth()];
+        var endDay = end.date.getDate();
+        return("\nStarts: " + startMonth + " " + startDay + "\nEnds: " + endMonth + " " + endDay);
+    }
+    var startTime = getStringTime(startDateTime);
+    var endTime = getStringTime(endDateTime);
+    return("\nStarts: " + months[startDateTime.getMonth()] + " " + startDateTime.getDate() + startTime + "\nEnds: " + months[endDateTime.getMonth()] + " " + endDateTime.getDate() + endTime);
+}
+
+function getStringTime(timeValue) {
+    var hours = timeValue.getHours();
+    var mins = timeValue.getMinutes();
+    if(mins == 0) {
+        mins = "00";
+    }
+    if(hours == 0) {
+        return(" 12:" + mins + " AM");
+    }
+    else if(hours < 12) {
+        return(" " + hours + ":" + mins + " AM");
+    }
+    else if(hours == 12) {
+        return(" " + hours + ":" + mins + " PM")
+    }
+    else if(hours < 24) {
+        return(" " + (hours-12) + ":" + mins + " PM");
+    }
+    else {
+        return(" All day");
+    }
 }
 
 function appendEvent(message, weekday, color) {

@@ -3,6 +3,7 @@
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/FrontEndCredentialLoader.java
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/util/DatastoreModule.java
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/UserLoginServlet.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/AutoEventProcessor.java
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/UserInfoServlet.java
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/util/CredentialManager.java
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/UserLoginCallbackServlet.java

@@ -13,8 +13,9 @@
     <meta name="google-signin-client_id"
         content="569803275461-e4n2du96d1b8mps300gh834sr3es88j1.apps.googleusercontent.com">
 
-    <!-- BEGIN Pre-requisites -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!-- BEGIN Pre-requisites 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://apis.google.com/js/client:platform.js"></script>
     <script src="https://apis.google.com/js/api:client.js"></script>
 </head>
@@ -58,10 +59,13 @@
                         <div class="card grid grid-2">
                            <h2>Create New Auto Event</h2>
                            <div class="userList"><h3 id="autoEventHeader">Enter Users by Email Address</h3>
-                                <input type="email" class="userEmail my-2" placeholder="example@gmail.com"></br>
-                                <button class="addUserByEmailButton btn">Add User</button>
+                                <input type="email" id="userEmailField" class="userEmail my-2" placeholder="example@gmail.com"></br>
+                                <button class="addUserByEmailButton btn" onclick="addUser()">Add User</button>
                            </div>
+                           <div id="addedUsers"><button class="btn" onclick="calculateAutoEventTime()">Submit</button></div>
+                           
                         </div>
+                        
                 </div>
                 <div id="autoEventFinal">
                     <div class="card grid grid-2">

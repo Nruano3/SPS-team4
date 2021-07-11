@@ -366,11 +366,19 @@ function listUpcomingEvents() {
 const dayOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const colorids = ['#000000', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#000000', '#616161', '#3f51b5', '#0b8043', '#d60000', '#039be5'];
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-var milliDay = 24 * 60 * 1000;
+const milliDay = 24 * 60 * 1000;
 var currDate = new Date();
 
 function initializeCalendar() {
-    currDate = new Date((new Date()).setHours(0,0,0,0));
+    var temp = new Date();
+    if(temp.getDay() == 0) {
+        currDate.setDate(temp.getDate() - 6);
+    }
+    else {
+        currDate.setDate(temp.getDate() - (temp.getDay() - 1));
+    } // statement makes sure week starts on a monday
+    currDate = new Date(currDate.setHours(0,0,0,0));
+    displayDays(currDate);
     populateCalendar(currDate);
 }
 
@@ -379,13 +387,17 @@ function initializeCalendar() {
 
 function nextWeekCalendar() {
     cleanCalendar();
-    currDate = new Date(currDate + (7 * milliDay)); // Increases week to next week
+    var temp = currDate + (7 * milliDay); // Increases week to next week
+    currDate = new Date(temp);
+    displayDays(currDate);
     populateCalendar(currDate);
 }
 
 function lastWeekCalendar() {
     cleanCalendar();
-    currDate = new Date(currDate.setDate(currDate.getDate() - 14));
+    var temp = currDate.setDate(currDate.getDate() - 14);
+    currDate = new Date(temp);
+    displayDays(currDate);
     populateCalendar(currDate);
 }
 
@@ -402,6 +414,7 @@ function populateCalendar(calDate) {
                 'orderBy': 'startTime'
             }).then(function(response){
                 var events = response.result.items;
+                displayMonth(events);
                 if (events.length > 0) {
                     for (i = 0; i < events.length; i++) {
                     var event = events[i];
@@ -472,7 +485,40 @@ function appendEvent(message, weekday, color) {
         pre.appendChild(post);
 }
 
+function displayDays() {
+    var date = new Date(currDate);
+    for(i=0; i<dayOfWeek.length; i++) {
+        var dayweek = date.getDay();
+        var daymonth = date.getDate();
+        var dayelem = document.getElementById(dayOfWeek[dayweek]);
+        dayelem.appendChild(document.createTextNode(dayOfWeek[dayweek].toUpperCase()))
+        dayelem.appendChild(document.createElement("br"));
+        dayelem.appendChild(document.createTextNode(daymonth));
+        date.setDate(date.getDate() + 1);
+    }
+}
+
+function displayMonth(events) {
+    var month = document.getElementById('month');
+    var monMonth = (new Date(events[0].start.dateTime)).getMonth();
+    var sunMonth = (new Date(events[events.length-1].start.dateTime)).getMonth();
+    if(monMonth == sunMonth) {
+        month.appendChild(document.createTextNode(months[monMonth]));
+    }
+    else {
+        month.appendChild(document.createTextNode(months[monMonth] + '/' + months[sunMonth]));
+    }
+}
+
 function cleanCalendar() {
+    var ele = document.getElementById('month');
+    ele.innerHTML = '';
+    for(i=0; i<dayOfWeek.length; i++) {
+        var ele = document.getElementById(dayOfWeek[i]);
+        while(ele.hasChildNodes()) {
+            ele.removeChild(ele.firstChild);
+        }
+    }
     for(i=0; i<dayOfWeek.length; i++) {
         var ele = document.getElementById('event' + dayOfWeek[i]);
         while(ele.hasChildNodes()) {

@@ -275,7 +275,7 @@ async function displayUserData(user){
     }    
     //Display in document
 
-    populateCalendar();
+    initializeCalendar();
    
     $('#userContent').attr('style', 'display: grid');
      document.getElementById('userImg').src = profile.getImageUrl();
@@ -364,17 +364,39 @@ function listUpcomingEvents() {
 }
 
 const dayOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-const colorids = ['#000000', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#000000', '#616161', '#3f51b5', '#0b8043', '#d60000', '#039be5']
+const colorids = ['#000000', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#000000', '#616161', '#3f51b5', '#0b8043', '#d60000', '#039be5'];
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var milliDay = 24 * 60 * 1000;
+var currDate = new Date();
 
-function populateCalendar() {
+function initializeCalendar() {
+    currDate = new Date((new Date()).setHours(0,0,0,0));
+    populateCalendar(currDate);
+}
+
+ /* Note on next few functions to select the date and range of dates the arithmetic for the dates seems to be wierd or I am misunderstanding something so that it is not working consistently? I originally used the process where I add 7 (days) to the currentvalue.getDate() value for the range of dates to display on the calendar.  I found out that this does not work for whatever reason with adjusting the first calendar date, so I had to use the milliseconds process where I add a week's worth of milliseconds to the date.  However, this only works for adding to a date and not for subtracting, so I had to go back to the original process for the previous week adjustment, but it requires the removal of two weeks.  However it works now, maybe someone can help me figure it out.
+ */
+
+function nextWeekCalendar() {
+    cleanCalendar();
+    currDate = new Date(currDate + (7 * milliDay)); // Increases week to next week
+    populateCalendar(currDate);
+}
+
+function lastWeekCalendar() {
+    cleanCalendar();
+    currDate = new Date(currDate.setDate(currDate.getDate() - 14));
+    populateCalendar(currDate);
+}
+
+function populateCalendar(calDate) {
         gapi.client.load('calendar', 'v3', function() {
             
 
             gapi.client.calendar.events.list({
                 'calendarId': 'primary',
-                'timeMin': (new Date('June 28, 2021 00:00:00')).toISOString(),
-                'timeMax': (new Date('July 5, 2021 00:00:00')).toISOString(),
+                'timeMin': (calDate).toISOString(),
+                'timeMax': (new Date(calDate.setDate(calDate.getDate() + 7))).toISOString(),
                 'showDeleted': false,
                 'singleEvents': true,
                 'orderBy': 'startTime'
@@ -448,6 +470,15 @@ function appendEvent(message, weekday, color) {
         var textContent = document.createTextNode(message + '\r\n');
         post.appendChild(textContent);
         pre.appendChild(post);
+}
+
+function cleanCalendar() {
+    for(i=0; i<dayOfWeek.length; i++) {
+        var ele = document.getElementById('event' + dayOfWeek[i]);
+        while(ele.hasChildNodes()) {
+            ele.removeChild(ele.firstChild);
+        }
+    }
 }
 
 

@@ -59,14 +59,17 @@ function calculateAutoEventTime(){
     $.ajax({
         type: "POST",
         url: url,
-        data: json,
+        data: json.userList,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         error: function() {
             alert("Error");
         },
-        success: function() {
+        success: function(response) {
+            console.log(response);
             alert("OK");
+
+            
         }
     });
 }

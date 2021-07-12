@@ -21,7 +21,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.DateTime;
+
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.Calendar.Freebusy;
 import com.google.auth.oauth2.AccessToken;
@@ -30,6 +30,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.sps.util.DatastoreModule;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.google.api.services.calendar.model.FreeBusyRequest;
 import com.google.api.services.calendar.model.FreeBusyRequestItem;
@@ -125,11 +128,13 @@ public class AutoEventProcessor extends HttpServlet {
         int daysOfWeek = 7;
         int hoursOfDay = 24;
         int availableHours = endConstraint - startConstraint;
-
-        int[][] eventTimes = new int[daysOfWeek][availableHours];
-
+        //Create a table representing the calendar for a week
+        int[][] eventTimes = new int[daysOfWeek][hoursOfDay];
+        
+        //For each calendar submitted, proccess the busy times, and enter them into the array
         for (Calendar service : calendars) {
 
+            //get array of times
             JsonArray busyTimes = getFreeBusyTimes(service);
 
             ArrayList<JsonObject> times = new ArrayList<JsonObject>();
@@ -138,8 +143,53 @@ public class AutoEventProcessor extends HttpServlet {
             }
 
             for(JsonObject ob : times){
-                System.out.println(ob.get("end").toString());
+                
+                
+                //DateTime Monday = 1, Sunday = 7 Saved in 24 hour clock
+                DateTime startDate = new DateTime(ob.get("start").toString().replaceAll("\"","")).withZone(DateTimeZone.forID("America/Los_Angeles"));
+               
+                int startTime = startDate.getHourOfDay();
+                //determine end in hours
+                DateTime endDate = new DateTime(ob.get("end").toString().replaceAll("\"","")).withZone(DateTimeZone.forID("America/Los_Angeles"));
+                int endTime = endDate.getHourOfDay();
+                //determine day of week
+                int dayStart = startDate.getDayOfWeek();
+                int dayEnd = endDate.getDayOfWeek();
+                //increment relative coordinates in array with those values
+                System.out.println(startDate);
+
+                System.out.println(
+                    "Start Day: " + dayStart + 
+                  "\nStart Time: " + startTime +
+                  "\nEnd Day: " + dayEnd +
+                  "\nEnd Time:" + endTime + "\n\n"
+                );
+
+                
+                while(!((startTime == endTime) && (dayStart == dayEnd))){
+                    
+                        eventTimes[dayStart-1][startTime] += 1;
+                        startTime++;
+                        if(startTime %24 == 0){
+                            dayStart++;
+                            if(dayStart == 8) dayStart = 1;
+                            startTime = 0;
+                        } 
+                }
+
             }
+
+            System.out.println("DAY:     MON TUE WED THU FRI SAT SUN");
+            for(int hours = 0; hours < hoursOfDay; hours++){
+                String d = "HOUR "+ hours+ ":  ";
+                System.out.printf("%10s", d);
+                for(int days = 0; days < daysOfWeek; days++){
+                    System.out.print(eventTimes[days][hours] + "   ");
+                }
+                System.out.println();
+            }
+
+
             //Lists all Calendars Connected to given calenar service
              /*   String pageToken = null;
                 do {
@@ -158,36 +208,40 @@ public class AutoEventProcessor extends HttpServlet {
     }
 
     private static JsonArray getFreeBusyTimes(Calendar service) throws IOException {
-
+        //Build request
         FreeBusyRequest req = buildFreeBusyRequest();
-
+        //turn request into query
         Freebusy.Query query = service.freebusy().query(req);
-           
+        //execute query/request
         FreeBusyResponse res = query.execute();
-
+        //Store result in a json
         JsonObject json = new Gson().fromJson(res.toString(), JsonObject.class);
-
+        //return json array containing start and end times of "busy" chunks
         return json.getAsJsonObject("calendars").getAsJsonObject("primary").getAsJsonArray("busy");
     }
 
     private static FreeBusyRequest buildFreeBusyRequest(){
+
+        //Calculate a Week in milliseconds
         int milliseconds = 1000; int seconds = 60; int minutes = 60; int hours = 24; int weekDays = 7;
         long weekInMilliseconds = weekDays * hours * minutes * seconds * milliseconds;
+        //Determine range between today, and a week from today
         Date today = new Date(System.currentTimeMillis());
         Date endOfWeek = new Date(System.currentTimeMillis() + weekInMilliseconds);
-           
-        DateTime startTime = new DateTime(today, TimeZone.getDefault());
-        DateTime endTime = new DateTime(endOfWeek, TimeZone.getDefault());
-
-
+        //Cast to DateTime objects for FreeBusyRequest
+        com.google.api.client.util.DateTime startTime = new com.google.api.client.util.DateTime(today, TimeZone.getDefault());
+        com.google.api.client.util.DateTime endTime = new com.google.api.client.util.DateTime(endOfWeek, TimeZone.getDefault());
+       
+        //Build request with beggining and end dates
         FreeBusyRequest req = new FreeBusyRequest();
         req.setTimeMin(startTime);
         req.setTimeMax(endTime);
         
+        //Add the primary calendar to process
         List<FreeBusyRequestItem> list = new ArrayList<FreeBusyRequestItem>();
         list.add(new FreeBusyRequestItem().setId("primary"));
         req.setItems(list);
-
+        //return request
         return req;
     }
 

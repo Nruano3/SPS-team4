@@ -50,10 +50,7 @@ public class IDVerifyer extends HttpServlet {
         }
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
                 JacksonFactory.getDefaultInstance())
-                        // Specify the CLIENT_ID of the app that accesses the backend:
                         .setAudience(Collections.singletonList(APP_CREDENTIALS.getClient_id()))
-                        // Or, if multiple clients access the backend:
-                        // .setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
                         .build();
        
         try {

@@ -366,7 +366,6 @@ function listUpcomingEvents() {
 const dayOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const colorids = ['#000000', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#000000', '#616161', '#3f51b5', '#0b8043', '#d60000', '#039be5'];
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const milliDay = 24 * 60 * 1000;
 var currDate = new Date();
 
 function initializeCalendar() {
@@ -382,21 +381,19 @@ function initializeCalendar() {
     populateCalendar(currDate);
 }
 
- /* Note on next few functions to select the date and range of dates the arithmetic for the dates seems to be wierd or I am misunderstanding something so that it is not working consistently? I originally used the process where I add 7 (days) to the currentvalue.getDate() value for the range of dates to display on the calendar.  I found out that this does not work for whatever reason with adjusting the first calendar date, so I had to use the milliseconds process where I add a week's worth of milliseconds to the date.  However, this only works for adding to a date and not for subtracting, so I had to go back to the original process for the previous week adjustment, but it requires the removal of two weeks.  However it works now, maybe someone can help me figure it out.
+ /* Note on next few functions to select the date and range of dates the arithmetic for the dates seems to be wierd or I am misunderstanding something so that it is not working consistently? The adjustment of the date appears to be off by a week for some reason I can not understand, but it works.
  */
 
 function nextWeekCalendar() {
     cleanCalendar();
-    var temp = currDate + (7 * milliDay); // Increases week to next week
-    currDate = new Date(temp);
+    currDate.setDate(currDate.getDate()); // Increases week to next week
     displayDays(currDate);
     populateCalendar(currDate);
 }
 
 function lastWeekCalendar() {
     cleanCalendar();
-    var temp = currDate.setDate(currDate.getDate() - 14);
-    currDate = new Date(temp);
+    currDate.setDate(currDate.getDate() - 14); // Decreases week to previous week
     displayDays(currDate);
     populateCalendar(currDate);
 }
@@ -427,26 +424,49 @@ function populateCalendar(calDate) {
                     if (isNaN(cid)) {
                         cid = 12;
                     }
-                    appendEvent(event.summary + ' (' + when + ')', dayOfWeek[day], colorids[cid]);
+                    appendEvent(event.summary, event.start, event.end, dayOfWeek[day], colorids[cid]);
                     }
                 }
             });
         });
 }
 
-function getDateTimeStrings(start, end) {
-    var startDateTime = start.dateTime();
-    var endDateTime = end.dateTime();
-    if(!startDateTime || !endDateTime) {
-        var startMonth = months[start.date().getMonth()];
-        var startDay = start.date.getDate();
-        var endMonth = months[end.date().getMonth()];
-        var endDay = end.date.getDate();
-        return("\nStarts: " + startMonth + " " + startDay + "\nEnds: " + endMonth + " " + endDay);
+function appendEvent(message, start, end, weekday, color) {
+        var pre = document.getElementById('event' + weekday);
+        var div = document.createElement("div");
+        div.style.backgroundColor = color;
+        div.style.border = "1px solid black";
+        div.style.borderRadius = "15px";
+        div.style.padding = "6px";
+        div.style.color = "white";
+        div.style.textAlign = "center";
+        var textContent = document.createTextNode(message);
+        div.appendChild(textContent);
+        getDateTimeStrings(start, end, div);
+        pre.appendChild(div);
+}
+
+function getDateTimeStrings(start, end, elem) {
+    var startDateTime = new Date(start.dateTime);
+    var endDateTime = new Date(end.dateTime);
+    if(!startDateTime.getMonth() || !endDateTime.getMonth()) {
+        var startMonth = months[(new Date(start.date)).getMonth()];
+        var startDay = (new Date(start.date)).getDate();
+        var endMonth = months[(new Date(end.date)).getMonth()];
+        var endDay = (new Date(end.date)).getDate();
+        elem.appendChild(document.createElement("br"));
+        elem.appendChild(document.createTextNode("Starts: " + startMonth + " " + startDay));
+        elem.appendChild(document.createElement("br"));
+        elem.appendChild(document.createTextNode("Ends: " + endMonth + " " + endDay));
     }
-    var startTime = getStringTime(startDateTime);
-    var endTime = getStringTime(endDateTime);
-    return("\nStarts: " + months[startDateTime.getMonth()] + " " + startDateTime.getDate() + startTime + "\nEnds: " + months[endDateTime.getMonth()] + " " + endDateTime.getDate() + endTime);
+    else {
+        var startTime = getStringTime(startDateTime);
+        var endTime = getStringTime(endDateTime);
+        elem.appendChild(document.createElement("br"));
+        elem.appendChild(document.createTextNode("Starts: " + months[startDateTime.getMonth()] + " " + startDateTime.getDate()  +startTime));
+        elem.appendChild(document.createElement("br"));
+        elem.appendChild(document.createTextNode("Ends: " + months[endDateTime.getMonth()] + " " + endDateTime.getDate() + endTime));
+    }
 }
 
 function getStringTime(timeValue) {
@@ -472,28 +492,25 @@ function getStringTime(timeValue) {
     }
 }
 
-function appendEvent(message, weekday, color) {
-        var pre = document.getElementById('event' + weekday);
-        var post = document.createElement("div");
-        post.style.backgroundColor = color;
-        post.style.border = "1px solid black";
-        post.style.borderRadius = "15px";
-        post.style.padding = "3px";
-        post.style.color = "white";
-        var textContent = document.createTextNode(message + '\r\n');
-        post.appendChild(textContent);
-        pre.appendChild(post);
-}
-
 function displayDays() {
     var date = new Date(currDate);
     for(i=0; i<dayOfWeek.length; i++) {
         var dayweek = date.getDay();
         var daymonth = date.getDate();
         var dayelem = document.getElementById(dayOfWeek[dayweek]);
-        dayelem.appendChild(document.createTextNode(dayOfWeek[dayweek].toUpperCase()))
-        dayelem.appendChild(document.createElement("br"));
-        dayelem.appendChild(document.createTextNode(daymonth));
+        var div = document.createElement("div");
+        var today = new Date();
+        if((date.getDate() == today.getDate()) && (date.getMonth() == today.getMonth()) && (date.getFullYear() == today.getFullYear())) {
+            div.style.borderRadius = "50%";
+            div.style.border = "1px solid black";
+            div.style.width = "45px";
+            div.style.backgroundColor = "lightblue";
+            div.style.margin = "0 auto";
+        }
+        div.appendChild(document.createTextNode(dayOfWeek[dayweek].toUpperCase()))
+        div.appendChild(document.createElement("br"));
+        div.appendChild(document.createTextNode(daymonth));
+        dayelem.appendChild(div);
         date.setDate(date.getDate() + 1);
     }
 }

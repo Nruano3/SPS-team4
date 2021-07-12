@@ -1,8 +1,9 @@
 package com.google.sps.util;
 
 import java.io.IOException;
+import java.util.Date;
 
-
+import com.google.auth.oauth2.AccessToken;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
@@ -145,9 +146,8 @@ public class DatastoreModule {
         //TODO update user information
     }
 
-    public static String getUserAccessTokenWithEmail(String email) throws ClientProtocolException, IOException {
+    public static AccessToken getUserAccessTokenWithEmail(String email) throws ClientProtocolException, IOException {
 
-       String access_token = "";
        Query<Entity> query = Query.newEntityQueryBuilder()
                                 .setKind("UserProfile")
                                 .setFilter(PropertyFilter.eq("email", email))
@@ -159,23 +159,26 @@ public class DatastoreModule {
             String profileId = profileEntity.getString("id");
             return getUserAccessTokenWithId(profileId.toString());
         }
-        return access_token;
+        return null;
 
     }
 
-    public static String getUserAccessTokenWithId(String userId) throws ClientProtocolException, IOException {
-        String access_token = "";
+    public static AccessToken getUserAccessTokenWithId(String userId) throws ClientProtocolException, IOException {
+        
         keyFactory = dataStore.newKeyFactory().setKind("UserCredentials");
         Key profileKey = keyFactory.newKey(userId);
 
         Entity userCredentials = dataStore.get(profileKey);
         if(needsToBeRefreshed(userCredentials)){
-           
             refreshCredentials(userCredentials);
         }
         
-        access_token = userCredentials.getString("access_token");
-        return access_token;
+        String access_token = userCredentials.getString("access_token");
+        String expires_in = userCredentials.getString("expires_in");
+        Long timeStamp = userCredentials.getLong("timestamp");
+        Date expirationDate = new Date((Long.parseLong(expires_in) + timeStamp) * 1000);
+        
+        return new AccessToken(access_token, expirationDate);
     }
 
 

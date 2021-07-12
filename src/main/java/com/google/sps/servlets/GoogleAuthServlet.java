@@ -41,7 +41,7 @@ public class GoogleAuthServlet extends HttpServlet{
         }
     }
 
-    private static void connectToDatastore() {
+    private static void connectToDatastore() throws IOException {
         DatastoreModule.init();
     }
     private static void setAppCredentials() throws IOException {

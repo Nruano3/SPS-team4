@@ -94,6 +94,7 @@ public class AutoEventProcessor extends HttpServlet {
             res.getWriter().println(eventTimesJson);
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Error Occured");
             res.getWriter().println("{\"error\": true}");
         }
@@ -258,13 +259,15 @@ public class AutoEventProcessor extends HttpServlet {
 		public int start;
 		public int end;
 		public int day;
-		public int val;
+        public int val;
+        public int nonAttending;
 
-		Event(int start, int end, int day, int val){
+		Event(int start, int end, int day, int val, int nonAttending){
 			this.start = start;
 			this.end = end;
-			this.day = day;
-			this.val = val;
+			this.day = day + 1;
+            this.val = val;
+            this.nonAttending = nonAttending;
 		}
         
         @Override
@@ -284,15 +287,30 @@ public class AutoEventProcessor extends HttpServlet {
 		for(int day = 0; day < 7; day++){
 			for(int start = startConstraint; start < endConstraint - meetingLength; start++){
                 int val = freeBusyTimes[day][start] + freeBusyTimes[day][start+1] + freeBusyTimes[day][start+ 2];
-				events.add(new Event(start, start+meetingLength, day, val));
+                int nonAttendees = maxNonAttending(freeBusyTimes[day][start], freeBusyTimes[day][start+1], freeBusyTimes[day][start+ 2]);
+				events.add(new Event(start, start+meetingLength, day, val, nonAttendees));
 			}
 		}
 
 		Collections.sort(events);
-		
+        
+        for(Event e : events){
+            System.out.println(
+                "Day:   " + e.day
+             +"\nStart: " + e.start
+             +"\nEnd:   " + e.end
+             +"\nNon-attendees: " + e.nonAttending + "\n");
+        }
         
 		return "{\"result\": true}";
-	}
+    }
+    
+    private static int maxNonAttending(int day1, int day2, int day3){
+        List<Integer> nums = new ArrayList<Integer>();
+        nums.add(Integer.valueOf(day1)); nums.add(Integer.valueOf(day2)); nums.add(Integer.valueOf(day3));
+        Collections.sort(nums);
+        return nums.get(2);
+    }
 
 
 

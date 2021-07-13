@@ -55,23 +55,22 @@ function calculateAutoEventTime(){
     var json = {
         userList: JSON.stringify(users)
     }
+    var startRestriction = 8;
+    var endRestriction = 17;
+    var meetingLength = 3;
     var url = 'https://8080-cs-1084074782278-default.cs-us-west1-ijlt.cloudshell.dev/process-user-data';
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: json.userList,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        error: function() {
-            alert("Error");
-        },
-        success: function(response) {
-            console.log(response);
-            alert("OK");
 
-            
-        }
-    });
+
+    $.post(
+        url,
+        {userList: json.userList, startRes: startRestriction, endRes: endRestriction, meetingLength: meetingLength},
+        function(response){
+            alert("Ok");
+            console.log(response);
+        }).fail(function(resposne){
+            alert("error");
+        });
+
 }
 /**
  * 

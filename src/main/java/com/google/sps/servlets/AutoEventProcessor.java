@@ -1,10 +1,10 @@
 package com.google.sps.servlets;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -24,11 +24,10 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.Calendar.Freebusy;
-import com.google.auth.oauth2.AccessToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.sps.util.DatastoreModule;
 
 import org.joda.time.DateTime;
@@ -45,179 +44,148 @@ public class AutoEventProcessor extends HttpServlet {
     private static final String APPLICATION_NAME = "Meeting Manager";
     final private static JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-    @Override
     public void init() {
         try {
-            connectToDatastore();
+            DatastoreModule.init();
         } catch (IOException e) {
-
             e.printStackTrace();
         }
     }
 
-    private static void connectToDatastore() throws IOException {
-        DatastoreModule.init();
+    public static String stripQuotes(String input) {
+        return input.replaceAll("\"", "");
+    }
+
+    @Override
+    public void doGet(HttpServletRequest req, HttpServletResponse res) {
     }
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
-        /**
-         * 1. Get Users 2. Get User's Calendars 3. Process Calendars "Free" vs "Busy"
-         * Time 4. Turn results into a json 5. Return list of times: retJson = [{"Day":
-         * dayNumber, "Hour": hourNumber, "Minute": minuteNumber} ...]
-         */
+        res.setContentType("application/json;");
 
-        // Step 1
-        String[] users = getUsers(req);
+        // Users get sent as a JsonArray of Strings, use Gson Library to load them into
+        // a string array
+        String[] users = new Gson().fromJson(req.getParameter("userList"), String[].class);
 
-        int startConstraint = 0;// Integer.parseInt(req.getParameter("start"));
-        int endConstraint = 0;// Integer.parseInt(req.getParameter("end"));
-
-        try {
-            // Step 2
-            List<Calendar> calendars = getUsersCalendars(users);
-
-            // Step 3
-            int[] eventTimes = processCalendars(calendars, startConstraint, endConstraint);
-            /**
-             * int[] eventTimes = processCalendars(calendars, startConstraint,
-             * endConstraint) processCalendars will populate a 2D array typically 7x24 to
-             * represent all the hours in the week, but will be modified by the
-             * startConstraint and endConstraint , each event populates a coordinate
-             * [day][hour], by incrementing its value by 1 for each event per calendar that
-             * is taking up that time slot.
-             * 
-             * Once all calendars are processed, the 2D array will be "flattened" into a
-             * single dimmensional array, and sorted via a modified Counting Sort that
-             * populates the return array with the indexes of all the days/hours in order
-             * from "Most Available" to "Least Available". A lesser available time has a
-             * higher value stored at its coordinates from the above step, the most
-             * available times will have 0's stored in them.
-             * 
-             * Finally the returned array will be trimmed of any entry times where less than
-             * 2 people are available
-             */
-
-            // Step 4
-            String eventTimesJson = convertToJson(eventTimes, startConstraint, endConstraint);
-
-            res.setContentType("application/json;");
-            res.getWriter().println(eventTimesJson);
-
-            // Allows the thing to send "OK" back
-            doGet(req, res);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override // Use to send "OK" response to requester
-    public void doGet(HttpServletRequest req, HttpServletResponse res) {
-    }
-
-    private static String convertToJson(int[] eventTimes, int startConstraint, int endConstraint) {
-        String returnJson = "{\"result\": true}";
-        return returnJson;
-    }
-
-    private static int[] processCalendars(List<Calendar> calendars, int startConstraint, int endConstraint)
-            throws IOException, ParseException {
-
-        int daysOfWeek = 7;
-        int hoursOfDay = 24;
-        int availableHours = endConstraint - startConstraint;
-        //Create a table representing the calendar for a week
-        int[][] eventTimes = new int[daysOfWeek][hoursOfDay];
+        /* Scheduling Constraints */
+        int startConstraint = Integer.parseInt(req.getParameter("startRes"));
+        int endConstraint = Integer.parseInt(req.getParameter("endRes"));
+        int meetingLength = Integer.parseInt(req.getParameter("meetingLength"));
         
-        //For each calendar submitted, proccess the busy times, and enter them into the array
-        for (Calendar service : calendars) {
+        try {
 
-            //get array of times
-            JsonArray busyTimes = getFreeBusyTimes(service);
+            List<Calendar> calendars = getCalendars(users);
 
-            ArrayList<JsonObject> times = new ArrayList<JsonObject>();
-            for(int i = 0; i < busyTimes.size(); i++){
-                times.add((JsonObject) busyTimes.get(i));
-            }
+            int[][] freeBusyTimes = getFreeBusyTimes(calendars);
+            /* 
+                 Below is for Testing
 
-            for(JsonObject ob : times){
-                
-                
-                //DateTime Monday = 1, Sunday = 7 Saved in 24 hour clock
-                DateTime startDate = new DateTime(ob.get("start").toString().replaceAll("\"","")).withZone(DateTimeZone.forID("America/Los_Angeles"));
-               
-                int startTime = startDate.getHourOfDay();
-                //determine end in hours
-                DateTime endDate = new DateTime(ob.get("end").toString().replaceAll("\"","")).withZone(DateTimeZone.forID("America/Los_Angeles"));
-                int endTime = endDate.getHourOfDay();
-                //determine day of week
-                int dayStart = startDate.getDayOfWeek();
-                int dayEnd = endDate.getDayOfWeek();
-                //increment relative coordinates in array with those values
-                System.out.println(startDate);
-
-                System.out.println(
-                    "Start Day: " + dayStart + 
-                  "\nStart Time: " + startTime +
-                  "\nEnd Day: " + dayEnd +
-                  "\nEnd Time:" + endTime + "\n\n"
-                );
-
-                
-                while(!((startTime == endTime) && (dayStart == dayEnd))){
-                    
-                        eventTimes[dayStart-1][startTime] += 1;
-                        startTime++;
-                        if(startTime %24 == 0){
-                            dayStart++;
-                            if(dayStart == 8) dayStart = 1;
-                            startTime = 0;
-                        } 
-                }
-
-            }
-
-            System.out.println("DAY:     MON TUE WED THU FRI SAT SUN");
-            for(int hours = 0; hours < hoursOfDay; hours++){
-                String d = "HOUR "+ hours+ ":  ";
-                System.out.printf("%10s", d);
-                for(int days = 0; days < daysOfWeek; days++){
-                    System.out.print(eventTimes[days][hours] + "   ");
+            for(int hour = 0; hour < 24; hour++){
+                for(int day = 0; day < 7; day++){
+                    System.out.print(freeBusyTimes[day][hour] + " ");
                 }
                 System.out.println();
             }
+            */
+            String eventTimesJson = processFreeBusyTimes(freeBusyTimes, startConstraint, endConstraint, meetingLength);
 
+            res.getWriter().println(eventTimesJson);
 
-            //Lists all Calendars Connected to given calenar service
-             /*   String pageToken = null;
-                do {
-                    CalendarList calendarList = service.calendarList().list()
-                            .setPageToken(pageToken).execute();
-
-                    List<CalendarListEntry> items = calendarList.getItems();
-
-                    for (CalendarListEntry calendarListEntry : items) {
-                        System.out.println(calendarListEntry.getSummary());
-                    }
-                    pageToken = calendarList.getNextPageToken();
-                } while (pageToken != null);*/
+        } catch (Exception e) {
+            System.out.println("Error Occured");
+            res.getWriter().println("{\"error\": true}");
         }
-        return new int[10];
+
+        doGet(req, res);
+
     }
 
-    private static JsonArray getFreeBusyTimes(Calendar service) throws IOException {
-        //Build request
+    // ====================================Get Calendars Start ========================================//
+    private static List<Calendar> getCalendars(String[] users) throws org.apache.http.ParseException, IOException, GeneralSecurityException {
+
+        List<Calendar> calendars = new ArrayList<Calendar>();
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Credential creds;
+        TokenResponse tokenResponse = new TokenResponse();
+
+        for (String user : users) {
+
+            String access_token = DatastoreModule.getUserAccessTokenWithEmail(user);
+
+            if (access_token == null || access_token.equals("")) {
+                System.out.println("User: " + user + "\nIs not Registered");
+            } else {
+                tokenResponse.setAccessToken(access_token);
+                creds = buildCreds(HTTP_TRANSPORT, tokenResponse);
+                try {
+                    Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, creds)
+                            .setApplicationName(APPLICATION_NAME).build();
+
+                    calendars.add(service);
+
+                } catch (Exception e) {
+                    // This may cause a loop
+                    return getCalendars(users);
+                }
+            }
+        }
+
+        return calendars;
+    }
+
+    private static Credential buildCreds(HttpTransport transport, TokenResponse tokenResponse) {
+        return new Credential(BearerToken.authorizationHeaderAccessMethod()).setFromTokenResponse(tokenResponse);
+    }
+    // ====================================Get Calendars End========================================//
+
+    // ===============================GetFreeBusyTimes Start ========================================//
+    private static int[][] getFreeBusyTimes(List<Calendar> calendars) throws JsonSyntaxException, IOException {
+
+        // 2D array representing Days and Hours
+        int[][] times = new int[7][24];
+
+        ArrayList<JsonObject> freeBusyTimesList = getTimes(calendars);
+
+        for (JsonObject timeOb : freeBusyTimesList) {
+
+            processEventTimes(times, timeOb);
+
+        }
+        return times;
+    }
+
+    private static ArrayList<JsonObject> getTimes(List<Calendar> calendars) throws JsonSyntaxException, IOException {
+
+        ArrayList<JsonObject> times = new ArrayList<JsonObject>();
+        for (Calendar calendar : calendars) {
+            JsonArray busyTimes = getBusyTimes(calendar);
+
+            for (int i = 0; i < busyTimes.size(); i++) {
+                times.add((JsonObject) busyTimes.get(i));
+            }
+        }
+
+        return times;
+    }
+
+    private static JsonArray getBusyTimes(Calendar calendar) throws JsonSyntaxException, IOException {
+    	JsonObject json = new Gson().fromJson(buildAndExecuteFreeBusyRequest(calendar).toString(),
+    											JsonObject.class);
+
+    	return json.getAsJsonObject("calendars").getAsJsonObject("primary").getAsJsonArray("busy");
+    }
+
+    private static FreeBusyResponse buildAndExecuteFreeBusyRequest(Calendar calendar) throws IOException {
+    	//Build request
         FreeBusyRequest req = buildFreeBusyRequest();
         //turn request into query
-        Freebusy.Query query = service.freebusy().query(req);
+        Freebusy.Query query = calendar.freebusy().query(req);
         //execute query/request
         FreeBusyResponse res = query.execute();
-        //Store result in a json
-        JsonObject json = new Gson().fromJson(res.toString(), JsonObject.class);
-        //return json array containing start and end times of "busy" chunks
-        return json.getAsJsonObject("calendars").getAsJsonObject("primary").getAsJsonArray("busy");
+
+        return res;
     }
 
     private static FreeBusyRequest buildFreeBusyRequest(){
@@ -245,51 +213,88 @@ public class AutoEventProcessor extends HttpServlet {
         return req;
     }
 
-    private static List<Calendar> getUsersCalendars(String[] users) throws GeneralSecurityException, IOException {
 
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Credential creds;
-        TokenResponse tokenResponse = new TokenResponse();
-        List<Calendar> calendars = new ArrayList<Calendar>();
 
-        for (String userEmail : users) {
 
-            AccessToken access_token = DatastoreModule.getUserAccessTokenWithEmail(userEmail);
-            
-            if (access_token != null) {
-                System.out.println("User: " + userEmail + "\nAccess Token: " + access_token.getTokenValue());
-                tokenResponse.setAccessToken(access_token.getTokenValue());
-                
-                creds = createCredentialWithAccessTokenOnly(HTTP_TRANSPORT, JSON_FACTORY, tokenResponse);
-                Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, creds)
-                        .setApplicationName(APPLICATION_NAME).build();
+    private static void processEventTimes(int[][] times, JsonObject timeOb){
+    	//Time Zones are Default RN, will update that later
+    		DateTime startDate = processDate(timeOb, "start");
+   			DateTime endDate = processDate(timeOb, "end");
+    		
+    		int startTime = startDate.getHourOfDay();
+    		int startDay = startDate.getDayOfWeek();
 
-                calendars.add(service);
-            }
-            else 
-                System.out.println("User: " + userEmail + "\nNot Authorized/Registered");
-        }        
-        return calendars;
+    		int endTime = endDate.getHourOfDay();
+    		int endDay = endDate.getDayOfWeek();
+           
+    		while((startTime!= endTime) || (startDay != endDay)){
+
+    			times[startDay-1][startTime] += 1;
+    			//time starts at 0, mod operation AFTER incrementing
+    			startTime++;
+    			startTime %= 24;
+    			//Day starts at 1, mod operation BEFORE incrementing
+    		   	if(startTime == 0){
+                    startDay %= 7;
+    		   	    startDay++;
+                }
+    		}
+
     }
 
-    public static Credential createCredentialWithAccessTokenOnly(
-      HttpTransport transport, JsonFactory jsonFactory, TokenResponse tokenResponse) {
-            return new Credential(BearerToken.authorizationHeaderAccessMethod()).setFromTokenResponse(
-                        tokenResponse);
+    private static DateTime processDate(JsonObject timeOb, String time){
+    	return new DateTime(stripQuotes(timeOb.get(time).toString())).withZone(DateTimeZone.forID("America/Los_Angeles"));
     }
+//===============================GetFreeBusyTimes end ========================================//
 
-    private static String[] getUsers(HttpServletRequest req){
+//===============================processFreeBusyTimes Start ========================================//
 
-        StringBuffer jb = new StringBuffer();
-        String line = null;
-        try {
-            BufferedReader reader = req.getReader();
-            while ((line = reader.readLine()) != null)
-            jb.append(line);
-        } catch (Exception e) { /*report an error*/ }
-       System.out.println(jb.toString());
-       String[] users = new Gson().fromJson(jb.toString(), String[].class);
-       for(String user : users) System.out.println(user);
-       return users;
-    }
+
+   
+	private static String  processFreeBusyTimes(int[][] freeBusyTimes, int startConstraint, int endConstraint, int meetingLength){
+
+        	//Helper Class to Order Events
+	class Event implements Comparable<Event>{
+		public int start;
+		public int end;
+		public int day;
+		public int val;
+
+		Event(int start, int end, int day, int val){
+			this.start = start;
+			this.end = end;
+			this.day = day;
+			this.val = val;
+		}
+        
+        @Override
+        public int compareTo(Event o) {
+           
+            int res = this.val - o.val;
+            if (res < 0)
+                return -1;
+            else if (res > 0)
+                return 1;
+            else
+                return 0;
+        }       
+	}
+		 
+		List<Event> events = new ArrayList<Event>();
+		for(int day = 0; day < 7; day++){
+			for(int start = startConstraint; start < endConstraint - meetingLength; start++){
+                int val = freeBusyTimes[day][start] + freeBusyTimes[day][start+1] + freeBusyTimes[day][start+ 2];
+				events.add(new Event(start, start+meetingLength, day, val));
+			}
+		}
+
+		Collections.sort(events);
+		
+        
+		return "{\"result\": true}";
+	}
+
+
+
+//===============================processFreeBusyTimes End ========================================//
 }

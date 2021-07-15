@@ -21,11 +21,7 @@ import com.google.sps.util.OAuth2Credentials;
 
 @WebServlet("/Verify")
 public class IDVerifyer extends HttpServlet {
-
-    /**
-     *
-     */
-  
+ 
     private static final long serialVersionUID = -1902833343487881018L;
     private static final String CREDENTIALS_PATH = "client_secret.json";
     private static OAuth2Credentials APP_CREDENTIALS;
@@ -50,10 +46,7 @@ public class IDVerifyer extends HttpServlet {
         }
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
                 JacksonFactory.getDefaultInstance())
-                        // Specify the CLIENT_ID of the app that accesses the backend:
                         .setAudience(Collections.singletonList(APP_CREDENTIALS.getClient_id()))
-                        // Or, if multiple clients access the backend:
-                        // .setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
                         .build();
        
         try {

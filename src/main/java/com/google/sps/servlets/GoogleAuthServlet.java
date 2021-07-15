@@ -1,10 +1,9 @@
 package com.google.sps.servlets;
 
-import java.io.BufferedReader;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +40,7 @@ public class GoogleAuthServlet extends HttpServlet{
         }
     }
 
-    private static void connectToDatastore() {
+    private static void connectToDatastore() throws IOException {
         DatastoreModule.init();
     }
     private static void setAppCredentials() throws IOException {
@@ -52,23 +51,13 @@ public class GoogleAuthServlet extends HttpServlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
 
-        
-        InputStream is = request.getInputStream(); 
-        
-        StringBuilder sb = new StringBuilder();
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(is));
-        String inputLine = "";
-        while ((inputLine = in.readLine()) != null) {
-            sb.append(inputLine);
-        }
-        String authCode = sb.toString();
         if (request.getHeader("X-Requested-With") == null) {
         // Without the `X-Requested-With` header, this request could be forged. Aborts.
             System.out.println("Error");
              response.sendRedirect(request.getContextPath() + "/index.html");
 
         }
+        String authCode = request.getParameter("code");
         
          APP_CREDENTIALS = CredentialManager.setCredentials(CREDENTIALS_PATH);
         // Set path to the Web application client_secret_*.json file you downloaded from the
@@ -115,20 +104,6 @@ public class GoogleAuthServlet extends HttpServlet{
 
         DatastoreModule.storeUserCredentials(userCredentials, userId);
 
-
-
-        /**
-         *  .set("timestamp", timeStampInSeconds)
-                .set("id", profileId)
-                .set("access_token", userCredentials.get("access_token").toString().replaceAll(quotes,""))
-                .set("refresh_token", userCredentials.get("refresh_token").toString().replaceAll(quotes,""))
-                .set("scope", userCredentials.get("scope").toString().replaceAll(quotes,""))
-                .set("token_type", userCredentials.get("token_type").toString().replaceAll(quotes,""))
-                .set("expires_in", userCredentials.get("expires_in").toString().replaceAll(quotes,""))
-                .set("id_token", userCredentials.get("id_token").toString().replaceAll(quotes,""))
-                .build();
-         */
-
     }
     
     private void storeUserInfo(GoogleIdToken.Payload payload, String userId){
@@ -143,14 +118,5 @@ public class GoogleAuthServlet extends HttpServlet{
         userInfo.addProperty("email", payload.getEmail());
 
         DatastoreModule.storeUserInfo(userInfo);
-        /**
-         * Entity userEntity = Entity.newBuilder(keyFactory.newKey(userInfo.get("id").toString().replaceAll(quotes,"")))
-                                      .set("id", userInfo.get("id").toString().replaceAll(quotes,""))
-                                      .set("name", userInfo.get("name").toString().replaceAll(quotes,""))
-                                      .set("given_name", userInfo.get("given_name").toString().replaceAll(quotes,""))
-                                      .set("family_name", userInfo.get("family_name").toString().replaceAll(quotes,""))
-                                      .set("picture", userInfo.get("picture").toString().replaceAll(quotes,""))
-                                      .build();
-         */
     }
 }

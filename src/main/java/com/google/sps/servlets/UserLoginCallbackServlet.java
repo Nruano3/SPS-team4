@@ -69,7 +69,7 @@ public class UserLoginCallbackServlet extends HttpServlet {
         APP_CREDENTIALS = CredentialManager.setCredentials(CREDENTIALS_PATH);
     }
 
-    private static void connectToDatastore() {
+    private static void connectToDatastore() throws IOException {
         DatastoreModule.init();
     }
 

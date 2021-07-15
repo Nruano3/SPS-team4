@@ -1,6 +1,28 @@
+
+:root {
+    --primary-color: lightblue;
+    --secondary-color: rgb(199, 199, 199);
+
+    --light: rgb(96, 187, 214);
+    --dark: rgb(46, 92, 105);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    /*allows us to add padding and borders without adding width to the element*/
+    padding: 0;
+    margin: 0;
+}
+
+
+
+
 #createEvent {
     font-size: 18px;
     background-color: lightblue;
+    color: #333;
+    padding: 10px;
     border-radius: 10px;
     border: 1px solid black;
 }
@@ -8,6 +30,58 @@
 #createEvent:hover, #createEvent:focus {
     text-decoration: none;
     cursor: pointer;
+}
+
+
+select #lavender {
+    
+    background-color: #7986cb;  
+}
+
+select #sage {
+    
+  background-color: #33b679;   
+}
+
+select #grape {
+    
+  background-color: #8e24aa;  
+}
+
+select #flamingo {
+  background-color: #e67c73;  
+}
+
+select #banana {
+
+  background-color: #f6c026;   
+}
+
+select #tangerine {
+
+  background-color: #f5511d;  
+}
+select #graphite {
+
+  background-color: #616161;  
+}
+
+select #blueberry {
+ 
+  background-color: #3f51b5;   
+}
+
+select #basil {
+
+  background-color: #0b8043;  
+}
+select #tomato {
+
+  background-color: #d60000;  
+}
+select option[value="undefined"] {
+
+  background-color: #039be5;  
 }
 
 /* Modal Class */
@@ -26,7 +100,7 @@
 }
 
 .modal-content {
-    width: 50%;
+    width: 80%;
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
@@ -105,4 +179,39 @@ input[type = "submit"] {
 input[type = "submit"]:hover, input[type = "submit"]:focus {
     text-decoration: none;
     cursor: pointer;
+}
+
+/* Calendar Formatting */
+.calview {
+    padding: 20px;
+    grid-column: 1 / span 4;
+}
+
+#calendar {
+    width: 100%;
+    border: solid 2px;
+    border-radius: 20px;
+}
+
+#month {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.arrows {
+    width: 3%;
+}
+
+#dates {
+    width: 100%;
+}
+
+.datemarker {
+    border-bottom: solid 1px;
+    width: 13%;
+}
+
+table td {
+    vertical-align: top;
 }

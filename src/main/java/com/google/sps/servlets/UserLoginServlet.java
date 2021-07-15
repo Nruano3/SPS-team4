@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 
 import com.google.sps.util.CredentialManager;
 import com.google.sps.util.OAuth2Credentials;
-import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 
 /**
@@ -73,6 +72,7 @@ public class UserLoginServlet extends HttpServlet {
 
         //If no user is active, send redirect to authorization page
         res.sendRedirect(AUTH_URL);
+        
 
     }
 
@@ -105,7 +105,7 @@ public class UserLoginServlet extends HttpServlet {
                 .append("&client_id=").append(APP_CREDENTIALS.getClient_id())
                 .append("&response_type=code")
                 .append("&redirect_uri=").append(APP_CREDENTIALS.getRedirect_uris()[TESTING])
-                .append("&scope=").append(CalendarScopes.CALENDAR_EVENTS + " https://www.googleapis.com/auth/userinfo.profile")
+                .append("&scope=").append(CalendarScopes.CALENDAR_EVENTS + " " + CalendarScopes.CALENDAR + " https://www.googleapis.com/auth/userinfo.profile")
                 .append("&state=adminLogin59") //used for verifying correct traffic
                 .append("&access_type=offline")
                 .append("&approval_prompt=force")

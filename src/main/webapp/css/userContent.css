@@ -1,0 +1,108 @@
+.userContent {
+    display: none;
+    margin-top: 20px;
+    grid-template-rows: 2fr;
+}
+
+.userContent .card {
+    width: 250px;
+}
+.userContent .card img {
+    border-radius: 50px;
+}
+
+.userContent .profile.card{    
+    padding: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.userContent .profile {
+    align-items: center;
+    justify-items: center;
+}
+.userContent .profile h4 {
+    text-align: center;
+    margin: 20px;
+    border-radius: 15px;
+    border: 1px var(--primary-color) solid;
+    padding: 10px;
+}
+
+.userContent .container {
+    width: 100%;
+}
+
+.userContent a {
+    text-decoration: none;
+    color: #333;
+}
+
+.userContent ul {
+    list-style: none;
+}
+
+.userContent .userNav {
+    text-align: center;
+    background-color: rgb(199, 199, 199);
+    grid-row: 2;
+    grid-column: 1;
+}
+
+.userContent .userNav li {
+    font-size: 17px;
+    padding: 5px 0;
+    margin-bottom: 5px;
+    border-bottom: 2px rgb(141, 141, 141) solid;
+}
+
+.userContent .userNav li:hover {
+    background-color:rgb(226, 226, 226);
+    border-bottom: 2px solid var(--light);
+    transition: 0.5s ease all;
+}
+
+.userContent .grid .event {
+    margin: 20px;
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    grid-column: 2 / span 3;
+    grid-row: 1 / span 2;
+}
+
+.userContent .event .card {
+    grid-template-rows: repeat(2, 2fr);
+    margin: 20px auto;
+    justify-self: center;
+    width: 90%;
+}
+
+.userContent .event input[type = "submit"] {
+    padding: 5px;
+    float: none;
+    justify-self: center;
+}
+
+.userContent .event .userList {
+    grid-row: 2;
+    grid-column: 1 / span 2;
+}
+
+.userContent input[type="email"] {
+    font-size: 18px;
+    border: 0;
+    border-bottom: 2px solid #b4becb ;
+    width: 50%;
+    padding: 10px;
+    
+}
+
+.userContent input[type="email"]:focus {
+    
+    outline: none;
+    border: 0;
+    border-bottom: 2px solid var(--light) ;
+    transition: 0.5s ease all;   
+}
+

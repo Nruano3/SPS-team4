@@ -61,6 +61,7 @@ public class MeetingTimeManager extends HttpServlet {
     private static int[][] eventMatrix;
     private static List<Event> events;
     private static int retryCounter = 0;
+    private static final String error = "{\"error\": true}";
 
     @Override
     public void init() {
@@ -83,6 +84,7 @@ public class MeetingTimeManager extends HttpServlet {
         return input.replaceAll("\"", "");
     }
 
+    
     /**
          * Event Processing Algorithm:
          * 
@@ -127,8 +129,9 @@ public class MeetingTimeManager extends HttpServlet {
 
             // Step 1.
 
-            // Users get sent as a JsonArray of Strings, use Gson Library to load them into
-            // a string array
+            /** Users get sent as a JsonArray of Strings, 
+             * use Gson Library to load them into
+             * a string array */
             users = new Gson().fromJson(req.getParameter("userList"), String[].class);
             numberOfInvitees = users.length;
 
@@ -163,6 +166,7 @@ public class MeetingTimeManager extends HttpServlet {
         } catch (ParseException | GeneralSecurityException e) {
 
             e.printStackTrace();
+            res.getWriter().println(error);
         }
 
         //Redirect to doGet to return 200 OK response

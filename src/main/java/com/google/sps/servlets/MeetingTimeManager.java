@@ -553,8 +553,5 @@ public class MeetingTimeManager extends HttpServlet {
 
         //Return largest number
         return largestNumber;
-
     }
-
-
 }

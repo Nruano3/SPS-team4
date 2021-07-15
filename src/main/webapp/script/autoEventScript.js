@@ -1,8 +1,11 @@
 
+
+addUserToList(sessionStorage.user);
+
 function addUser(){
    
     var emailField = document.getElementById('userEmailField');
-    var user = emailField.value;
+    var user = emailField.value.toLowerCase();
     emailField.value = "";
 
     addUserToList(user);
@@ -12,14 +15,13 @@ function addUserToList(user){
     //Get User List
      var userList = document.getElementById('addedUsers');
      //Create a new Div
-     var userDiv = document.createElement('div');
-     userDiv.className = "addedUserDiv";
-     userDiv.style.display = 'flex';
-     userDiv.style.justifyContent = 'space-between';
+     var userDiv = document.createElement('p');
+     userDiv.className = "addedUserP";
+    
      //Add user and a remove button to the div
      userDiv.innerHTML = "<p class=\"addedUserEmail\">" + user + "</p><button class=\'userBtn\ btn' onclick=\"removeUser(event)\">Remove</button>";
     
-     userList.prepend(userDiv);
+     userList.appendChild(userDiv);
      
 }
 

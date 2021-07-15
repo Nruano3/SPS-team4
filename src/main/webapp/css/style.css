@@ -1,9 +1,9 @@
 
 :root {
-    --primary-color: lightblue;
+    --primary-color: #add8e6;
     --secondary-color: rgb(199, 199, 199);
 
-    --light: rgb(96, 187, 214);
+    --light: #60bbd6;
     --dark: rgb(46, 92, 105);
 }
 

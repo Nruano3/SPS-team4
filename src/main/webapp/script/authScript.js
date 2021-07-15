@@ -190,6 +190,7 @@ async function getAndStoreUserTokens(){
         //Store useful information from the user
         sessionStorage.id_token = await user.getAuthResponse().id_token;
         sessionStorage.access_token = await user.getAuthResponse().access_token;
+        
 
     }else {
         //If not signed in, attempt to "quietly" login
@@ -247,7 +248,7 @@ async function loadUserData() {
         console.log('Name: ' + profile.getName());
         console.log('Image URL: ' + profile.getImageUrl());
         console.log('Email: ' + profile.getEmail());
-
+        sessionStorage.user = await profile.getEmail();
         //Display User Content
         $('#userContent').attr('style', 'display: grid');
         document.getElementById('userImg').src = profile.getImageUrl();

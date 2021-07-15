@@ -516,7 +516,7 @@ public class MeetingTimeManager extends HttpServlet {
                 newMeetingEndTime = start + meetingLength;
 
                 //Create and add event to Event ArrayList only if MORE than 50% can attend
-                if(nonAttendees <= (numberOfInvitees / (2.0))) {
+                if(nonAttendees < (numberOfInvitees / (2.0))) {
                     events.add(new Event(start, newMeetingEndTime, day, sum, nonAttendees));
                 }
 

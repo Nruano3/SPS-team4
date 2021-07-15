@@ -10,5 +10,7 @@
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/ServerMain.java
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/GoogleAuthServlet.java
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/IDVerifyer.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/servlets/MeetingTimeManager.java
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/util/UserInfo.java
 /home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/util/Json.java
+/home/randerson/software-product-sprint/team4Proj/SPS-team4/src/main/java/com/google/sps/util/Event.java

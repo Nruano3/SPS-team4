@@ -73,124 +73,157 @@
                     </div>
                 </div>
             </div>
-    <div id="eventmodal" class="modal">
-        <div class="modal-content">
-            <span id="modalclose" onclick=closemodal()>&times;</span>
-            <p>Schedule New Event</p>
-            <form id="eventForm" method="POST">
 
-                <label for="title-input">Event Title<span class="required">*</span>:</label>
-                    <input type="text" id="title-input" placeholder="Event Title"
-                        oninvalid="this.setCustomValidity('Please fill in this field to create the event')"
-                        onvalid="this.setCustomValidity('')"></input>
-                    <br />
+            <div class = "calview">
+                <p id = "month"></p><br/>
+                <div id = "calendar">
+                <table id = "dates">
+                    <tr id = "week" >
+                        <th class = "arrows"><a href = "#" onclick = "lastWeekCalendar()" id = "lastweek"> < </a></th>
+                        <th class = "datemarker" id = "mon"></th>
+                        <th class = "datemarker" id = "tue"></th>
+                        <th class = "datemarker" id = "wed"></th>
+                        <th class = "datemarker" id = "thu"></th>
+                        <th class = "datemarker" id = "fri"></th>
+                        <th class = "datemarker" id = "sat"></th>
+                        <th class = "datemarker" id = "sun"></th>
+                        <th class = "arrows"><a href = "#" onclick = "nextWeekCalendar()" id = "nextweek"> > </a></th>
+                    </tr>
+                    <tr id = "events">
+                        <td></td>
+                        <td id = "eventmon"></td>
+                        <td id = "eventtue"></td>
+                        <td id = "eventwed"></td>
+                        <td id = "eventthu"></td>
+                        <td id = "eventfri"></td>
+                        <td id = "eventsat"></td>
+                        <td id = "eventsun"></td>
+                        <td></td>
+                    </tr>
+                </table>
+                </div> <!-- end of calendar div -->
+            </div>
 
-                <div id="formcontainer">
 
-                    <div id="leftform">
-                        <label for="start-date-input">Start Date<span class="required">*</span>:</label>
-                        <input type="date" id="start-date-input" placeholder="Start Date"
-                            onfocus="(this.type='date')" onblur="(this.type='text')"
+            <div id="eventmodal" class="modal">
+                <div class="modal-content">
+                <span id="modalclose" onclick=closemodal()>&times;</span>
+                <p>Schedule New Event</p>
+                <form id="eventForm" method="POST">
+
+                    <label for="title-input">Event Title<span class="required">*</span>:</label>
+                        <input type="text" id="title-input" placeholder="Event Title"
                             oninvalid="this.setCustomValidity('Please fill in this field to create the event')"
                             onvalid="this.setCustomValidity('')"></input>
                         <br />
-                            <label for="early-time-input">Earliest Start Time<span class="required">*</span>:</label>
-                            <input type="time" id="early-time-input" placeholder="Earliest Start Time"
-                                onfocus="(this.type='time')" onblur="(this.type='text')"
-                                oninvalid="this.setCustomValidity('Please fill in this field to   create the event')"
-                                onvalid="this.setCustomValidity('')"></input>
-                            <br />
 
-                            <label for="hour-input">Duration<span class="required">*</span>:</label>
-                            <select id="hour-input"
-                                oninvalid="this.setCustomValidity('Please fill in this field to create the event')"
-                                onvalid="this.setCustomValidity('')">
-                                <option value="" disabled selected>hours</option>
-                                <option value=0>0</option>
-                                <option value=1>1</option>
-                                <option value=2>2</option>
-                                <option value=3>3</option>
-                                <option value=4>4</option>
-                                <option value=5>5</option>
-                                <option value=6>6</option>
-                                <option value=7>7</option>
-                                <option value=8>8</option>
-                                <option value=9>9</option>
-                                <option value=10>10</option>
-                                <option value=11>11</option>
-                                <option value=12>12</option>
-                                <option value=13>13</option>
-                                <option value=14>14</option>
-                                <option value=15>15</option>
-                                <option value=16>16</option>
-                                <option value=17>17</option>
-                                <option value=18>18</option>
-                                <option value=19>19</option>
-                                <option value=20>20</option>
-                                <option value=21>21</option>
-                                <option value=22>22</option>
-                                <option value=23>23</option>
-                                <option value=24>24</option>
-                            </select>
-                            <select id="min-input" placeholder="minutes"
-                                oninvalid="this.setCustomValidity('Please fill  in this field to create the event')"
-                                onvalid="this.setCustomValidity('')">
-                                <option value="" disabled selected>minutes</option>
-                                <option value=0>0</option>
-                                <option value=15>15</option>
-                                <option value=30>30</option>
-                                <option value=45>45</option>
-                            </select>
-                        </div>
+                    <div id="formcontainer">
 
-                        <div id="rightform">
-                            <label for="end-date-input">End Date<span class="required">*</span>:</label>
-                            <input type="date" id="end-date-input" placeholder="End Date" onfocus="(this.type='date')"
-                                onblur="(this.type='text')"
+                        <div id="leftform">
+                            <label for="start-date-input">Start Date<span class="required">*</span>:</label>
+                            <input type="date" id="start-date-input" placeholder="Start Date"
+                                onfocus="(this.type='date')" onblur="(this.type='text')"
                                 oninvalid="this.setCustomValidity('Please fill in this field to create the event')"
                                 onvalid="this.setCustomValidity('')"></input>
                             <br />
-                            <label for="late-time-input">Latest Start Time<span class="required">*</span>:</label>
-                            <input type="time" id="late-time-input" placeholder="Latest Start Time"
-                                onfocus="(this.type='time')" onblur="(this.type='text')"
-                                oninvalid="this.setCustomValidity('Please fill in this field to create the event')"
-                                onvalid="this.setCustomValidity('')"></input>
-                            <br /><br />
-                            <label for="color-input">Color<span class="required">*</span>:</label>
-                            <select id="color-input">
-                                <option value="undefined">Default</option>
-                                <option value="1">Lavender</option>
-                                <option value="2">Sage</option>
-                                <option value="3">Grape</option>
-                                <option value="4">Flamingo</option>
-                                <option value="5">Banana</option>
-                                <option value="6">Tangerine</option>
-                                <option value="8">Graphite</option>
-                                <option value="9">Blueberry</option>
-                                <option value="10">Basil</option>
-                                <option value="11">Tomato <span id="tomato"></span></option>
-                            </select>
+                                <label for="early-time-input">Earliest Start Time<span class="required">*</span>:</label>
+                                <input type="time" id="early-time-input" placeholder="Earliest Start Time"
+                                    onfocus="(this.type='time')" onblur="(this.type='text')"
+                                    oninvalid="this.setCustomValidity('Please fill in this field to   create the event')"
+                                    onvalid="this.setCustomValidity('')"></input>
+                                <br />
+
+                                <label for="hour-input">Duration<span class="required">*</span>:</label>
+                                <select id="hour-input"
+                                    oninvalid="this.setCustomValidity('Please fill in this field to create the event')"
+                                    onvalid="this.setCustomValidity('')">
+                                    <option value="" disabled selected>hours</option>
+                                    <option value=0>0</option>
+                                    <option value=1>1</option>
+                                    <option value=2>2</option>
+                                    <option value=3>3</option>
+                                    <option value=4>4</option>
+                                    <option value=5>5</option>
+                                    <option value=6>6</option>
+                                    <option value=7>7</option>
+                                    <option value=8>8</option>
+                                    <option value=9>9</option>
+                                    <option value=10>10</option>
+                                    <option value=11>11</option>
+                                    <option value=12>12</option>
+                                    <option value=13>13</option>
+                                    <option value=14>14</option>
+                                    <option value=15>15</option>
+                                    <option value=16>16</option>
+                                    <option value=17>17</option>
+                                    <option value=18>18</option>
+                                    <option value=19>19</option>
+                                    <option value=20>20</option>
+                                    <option value=21>21</option>
+                                    <option value=22>22</option>
+                                    <option value=23>23</option>
+                                    <option value=24>24</option>
+                                </select>
+                                <select id="min-input" placeholder="minutes"
+                                    oninvalid="this.setCustomValidity('Please fill  in this field to create the event')"
+                                    onvalid="this.setCustomValidity('')">
+                                    <option value="" disabled selected>minutes</option>
+                                    <option value=0>0</option>
+                                    <option value=15>15</option>
+                                    <option value=30>30</option>
+                                    <option value=45>45</option>
+                                </select>
+                            </div>
+
+                            <div id="rightform">
+                                <label for="end-date-input">End Date<span class="required">*</span>:</label>
+                                <input type="date" id="end-date-input" placeholder="End Date" onfocus="(this.type='date')"
+                                    onblur="(this.type='text')"
+                                    oninvalid="this.setCustomValidity('Please fill in this field to create the event')"
+                                    onvalid="this.setCustomValidity('')"></input>
+                                <br />
+                                <label for="late-time-input">Latest Start Time<span class="required">*</span>:</label>
+                                <input type="time" id="late-time-input" placeholder="Latest Start Time"
+                                    onfocus="(this.type='time')" onblur="(this.type='text')"
+                                    oninvalid="this.setCustomValidity('Please fill in this field to create the event')"
+                                    onvalid="this.setCustomValidity('')"></input>
+                                <br /><br />
+                                <label for="color-input">Color<span class="required">*</span>:</label>
+                                <select id="color-input">
+                                    <option value="undefined">Default</option>
+                                    <option value="1" id = "lavender">Lavender</option>
+                                    <option value="2" id = "sage">Sage</option>
+                                    <option value="3" id = "grape">Grape</option>
+                                    <option value="4" id = "flamingo">Flamingo</option>
+                                    <option value="5" id = "banana">Banana</option>
+                                    <option value="6" id = "tangerine">Tangerine</option>
+                                    <option value="8" id = "graphite">Graphite</option>
+                                    <option value="9" id = "blueberry">Blueberry</option>
+                                    <option value="10" id = "basil">Basil</option>
+                                    <option value="11" id = "tomato">Tomato</option>
+                                </select>
+
+                            </div>
 
                         </div>
 
-                    </div>
+                        <br />
+                        <label for="invitees-input">Invitees<span class="required">*</span>:</label>
+                        <input type="text" id="invitees-input" placeholder="emails separated by commas"
+                            oninvalid="this.setCustomValidity('Please fill in this field to create the event')"
+                            onvalid="this.setCustomValidity('')"></input>
+                        <br />
+                        <p class="required">* required section</p>
+                        <input type="submit" value="Save" />
+                        <br />
+                        <br />
+                    </form> <!-- Event form -->
+                </div> <!-- end of modal-content div -->
+            </div> <!-- end of eventmodal div -->   
+        </div> <!-- end of container grid grid-4 card div -->
 
-                    <br />
-                    <label for="invitees-input">Invitees<span class="required">*</span>:</label>
-                    <input type="text" id="invitees-input" placeholder="emails separated by commas"
-                        oninvalid="this.setCustomValidity('Please fill in this field to create the event')"
-                        onvalid="this.setCustomValidity('')"></input>
-                    <br />
-                    <p class="required">* required section</p>
-                    <input type="submit" value="Save" />
-                    <br />
-                    <br />
-                </form> <!-- Event form -->
-            </div>
-
-    </div>            
-    </div>
-    </div>
+        
+    </div> <!-- end of userContent div -->
 
     <div id="signOutContent"></div>
     <script src="script.js"></script>

@@ -1,10 +1,9 @@
 package com.google.sps.servlets;
 
-import java.io.BufferedReader;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,23 +51,13 @@ public class GoogleAuthServlet extends HttpServlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws FileNotFoundException, IOException {
 
-        
-        InputStream is = request.getInputStream(); 
-        
-        StringBuilder sb = new StringBuilder();
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(is));
-        String inputLine = "";
-        while ((inputLine = in.readLine()) != null) {
-            sb.append(inputLine);
-        }
-        String authCode = sb.toString();
         if (request.getHeader("X-Requested-With") == null) {
         // Without the `X-Requested-With` header, this request could be forged. Aborts.
             System.out.println("Error");
              response.sendRedirect(request.getContextPath() + "/index.html");
 
         }
+        String authCode = request.getParameter("code");
         
          APP_CREDENTIALS = CredentialManager.setCredentials(CREDENTIALS_PATH);
         // Set path to the Web application client_secret_*.json file you downloaded from the

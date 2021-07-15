@@ -229,6 +229,7 @@ function signInCallback(authResult) {
         $('#signOutButton').attr('style', 'display: grid');
        
 
+        
 	    // Send the code to the server
 	    $.ajax({
 	        type: 'POST',
@@ -388,14 +389,6 @@ function resetSession(){
         pre.appendChild(post);
 }
 
-function httpGet()
-{   
-    var theUrl = 'https://www.googleapis.com/calendar/v3/calendars/anderson94@mail.fresnostate.edu/events?key=' + sessionStorage.API_KEY;
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-    return xmlHttp.responseText;
-}
 
 //https://www.googleapis.com/calendar/v3/calendars/<CALENDAR_EMAIL>/events?key=
 function listUpcomingEvents() {

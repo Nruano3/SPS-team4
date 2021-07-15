@@ -13,11 +13,11 @@
     <meta name="google-signin-client_id"
         content="569803275461-e4n2du96d1b8mps300gh834sr3es88j1.apps.googleusercontent.com">
 
-    <!-- BEGIN Pre-requisites 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
+    <!-- BEGIN Pre-requisites -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://apis.google.com/js/client:platform.js"></script>
     <script src="https://apis.google.com/js/api:client.js"></script>
+    
 </head>
 <body>
     
@@ -109,7 +109,7 @@
                 <div class="modal-content">
                 <span id="modalclose" onclick=closemodal()>&times;</span>
                 <p>Schedule New Event</p>
-                <form id="eventForm" method="POST">
+                <form id="eventForm">
 
                     <label for="title-input">Event Title<span class="required">*</span>:</label>
                         <input type="text" id="title-input" placeholder="Event Title"
@@ -226,7 +226,10 @@
     </div> <!-- end of userContent div -->
 
     <div id="signOutContent"></div>
-    <script src="script.js"></script>
+    <script src="script/authScript.js"></script>
+    <script src="script/eventScript.js"></script>
+     <script src="script/calendarScript.js"></script>
+     <script src="script/autoEventScript.js"></script>
     <script>start()</script>
 </body>
 </html>

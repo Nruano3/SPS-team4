@@ -21,11 +21,7 @@ import com.google.sps.util.OAuth2Credentials;
 
 @WebServlet("/Verify")
 public class IDVerifyer extends HttpServlet {
-
-    /**
-     *
-     */
-  
+ 
     private static final long serialVersionUID = -1902833343487881018L;
     private static final String CREDENTIALS_PATH = "client_secret.json";
     private static OAuth2Credentials APP_CREDENTIALS;

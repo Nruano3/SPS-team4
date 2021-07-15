@@ -115,20 +115,6 @@ public class GoogleAuthServlet extends HttpServlet{
 
         DatastoreModule.storeUserCredentials(userCredentials, userId);
 
-
-
-        /**
-         *  .set("timestamp", timeStampInSeconds)
-                .set("id", profileId)
-                .set("access_token", userCredentials.get("access_token").toString().replaceAll(quotes,""))
-                .set("refresh_token", userCredentials.get("refresh_token").toString().replaceAll(quotes,""))
-                .set("scope", userCredentials.get("scope").toString().replaceAll(quotes,""))
-                .set("token_type", userCredentials.get("token_type").toString().replaceAll(quotes,""))
-                .set("expires_in", userCredentials.get("expires_in").toString().replaceAll(quotes,""))
-                .set("id_token", userCredentials.get("id_token").toString().replaceAll(quotes,""))
-                .build();
-         */
-
     }
     
     private void storeUserInfo(GoogleIdToken.Payload payload, String userId){
@@ -143,14 +129,5 @@ public class GoogleAuthServlet extends HttpServlet{
         userInfo.addProperty("email", payload.getEmail());
 
         DatastoreModule.storeUserInfo(userInfo);
-        /**
-         * Entity userEntity = Entity.newBuilder(keyFactory.newKey(userInfo.get("id").toString().replaceAll(quotes,"")))
-                                      .set("id", userInfo.get("id").toString().replaceAll(quotes,""))
-                                      .set("name", userInfo.get("name").toString().replaceAll(quotes,""))
-                                      .set("given_name", userInfo.get("given_name").toString().replaceAll(quotes,""))
-                                      .set("family_name", userInfo.get("family_name").toString().replaceAll(quotes,""))
-                                      .set("picture", userInfo.get("picture").toString().replaceAll(quotes,""))
-                                      .build();
-         */
     }
 }

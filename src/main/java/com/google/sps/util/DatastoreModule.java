@@ -213,7 +213,7 @@ public class DatastoreModule {
         // Build the refresh request
         String refresh_request_url = buildRefreshRequest(stripQuotes(userCredentials.getString("refresh_token")));
 
-        // Executre the Refresh request
+        // Execute the Refresh request
         String response = execute(refresh_request_url);
 
         // Modify the result into something usable (ie: JsonObject)

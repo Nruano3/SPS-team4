@@ -43,10 +43,12 @@ public class AutoEventProcessor extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String APPLICATION_NAME = "Meeting Manager";
     final private static JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static int retryCounter = 0;
 
     public void init() {
         try {
             DatastoreModule.init();
+            DateTimeZone.setDefault(DateTimeZone.forID("America/Los_Angeles"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,16 +81,7 @@ public class AutoEventProcessor extends HttpServlet {
             List<Calendar> calendars = getCalendars(users);
 
             int[][] freeBusyTimes = getFreeBusyTimes(calendars);
-            /* 
-                 Below is for Testing
-
-            for(int hour = 0; hour < 24; hour++){
-                for(int day = 0; day < 7; day++){
-                    System.out.print(freeBusyTimes[day][hour] + " ");
-                }
-                System.out.println();
-            }
-            */
+            
             String eventTimesJson = processFreeBusyTimes(freeBusyTimes, startConstraint, endConstraint, meetingLength);
 
             res.getWriter().println(eventTimesJson);
@@ -117,7 +110,8 @@ public class AutoEventProcessor extends HttpServlet {
 
             if (access_token == null || access_token.equals("")) {
                 System.out.println("User: " + user + "\nIs not Registered");
-            } else {
+            } 
+            else {
                 tokenResponse.setAccessToken(access_token);
                 creds = buildCreds(HTTP_TRANSPORT, tokenResponse);
                 try {
@@ -126,9 +120,19 @@ public class AutoEventProcessor extends HttpServlet {
 
                     calendars.add(service);
 
-                } catch (Exception e) {
-                    // This may cause a loop
-                    return getCalendars(users);
+                } 
+                catch (Exception e) {
+                    /*Authorization fails the first time
+                      usually corrected by resending an auth 
+                      request*/
+                    if(retryCounter < 5){
+                        return getCalendars(users);
+                    }
+                    else{
+                        e.printStackTrace();
+                    }
+                    
+                    
                 }
             }
         }
@@ -197,7 +201,7 @@ public class AutoEventProcessor extends HttpServlet {
         //Determine range between today, and a week from today
         Date today = new Date(System.currentTimeMillis());
         Date endOfWeek = new Date(System.currentTimeMillis() + weekInMilliseconds);
-        //Cast to DateTime objects for FreeBusyRequest
+        //Cast to DateTime (Google DateTime, not Joda DateTime) objects for FreeBusyRequest
         com.google.api.client.util.DateTime startTime = new com.google.api.client.util.DateTime(today, TimeZone.getDefault());
         com.google.api.client.util.DateTime endTime = new com.google.api.client.util.DateTime(endOfWeek, TimeZone.getDefault());
        
@@ -219,27 +223,27 @@ public class AutoEventProcessor extends HttpServlet {
 
     private static void processEventTimes(int[][] times, JsonObject timeOb){
     	//Time Zones are Default RN, will update that later
-    		DateTime startDate = processDate(timeOb, "start");
-   			DateTime endDate = processDate(timeOb, "end");
-    		
-    		int startTime = startDate.getHourOfDay();
-    		int startDay = startDate.getDayOfWeek();
+        DateTime startDate = processDate(timeOb, "start");
+   		DateTime endDate = processDate(timeOb, "end");
+    	
+    	int startTime = startDate.getHourOfDay();
+    	int startDay = startDate.getDayOfWeek();
 
-    		int endTime = endDate.getHourOfDay();
-    		int endDay = endDate.getDayOfWeek();
+    	int endTime = endDate.getHourOfDay();
+    	int endDay = endDate.getDayOfWeek();
            
-    		while((startTime!= endTime) || (startDay != endDay)){
+    	while((startTime!= endTime) || (startDay != endDay)){
 
-    			times[startDay-1][startTime] += 1;
-    			//time starts at 0, mod operation AFTER incrementing
-    			startTime++;
-    			startTime %= 24;
-    			//Day starts at 1, mod operation BEFORE incrementing
-    		   	if(startTime == 0){
-                    startDay %= 7;
-    		   	    startDay++;
-                }
-    		}
+    		times[startDay-1][startTime] += 1;
+    		//time starts at 0, mod operation AFTER incrementing
+    		startTime++;
+    		startTime %= 24;
+    		//Day starts at 1, mod operation BEFORE incrementing
+    	   	if(startTime == 0){
+                   startDay %= 7;
+    	   	    startDay++;
+            }
+    	}
 
     }
 
@@ -252,43 +256,73 @@ public class AutoEventProcessor extends HttpServlet {
 
 
    
-	private static String  processFreeBusyTimes(int[][] freeBusyTimes, int startConstraint, int endConstraint, int meetingLength){
+    private static String  processFreeBusyTimes(int[][] freeBusyTimes, int startConstraint, int endConstraint, int meetingLength){
 
-        	//Helper Class to Order Events
-	class Event implements Comparable<Event>{
-		public int start;
-		public int end;
-		public int day;
-        public int val;
-        public int nonAttending;
+       	//Helper Class to Order Events
+	    class Event implements Comparable<Event>{
+            public int start;
+            public int end;
+            public int day;
+            public int val;
+            public int nonAttending;
+            public DateTime startDate;
+            public DateTime endDate;
 
-		Event(int start, int end, int day, int val, int nonAttending){
-			this.start = start;
-			this.end = end;
-			this.day = day + 1;
-            this.val = val;
-            this.nonAttending = nonAttending;
-		}
+		    Event(int start, int end, int day, int val, int nonAttending){
+			    this.start = start;
+			    this.end = end;
+			    this.day = day + 1;
+                this.val = val;
+                this.nonAttending = nonAttending;
+            
+                this.startDate = DateTime.now();
+                this.startDate = this.startDate.hourOfDay().setCopy(this.start);
+                this.startDate = this.startDate.dayOfWeek().setCopy(this.day);
+                this.startDate = this.startDate.withZone(DateTimeZone.forID("America/Los_Angeles"));
+            
+                this.endDate = DateTime.now();
+                this.endDate = this.endDate.hourOfDay().setCopy(this.end);
+                this.endDate = this.endDate.dayOfWeek().setCopy(this.day);
+                this.endDate = this.endDate.withZone(DateTimeZone.forID("America/Los_Angeles"));
+            
+		    }
         
-        @Override
-        public int compareTo(Event o) {
+            @Override
+            public int compareTo(Event o) {
            
-            int res = this.val - o.val;
-            if (res < 0)
-                return -1;
-            else if (res > 0)
-                return 1;
-            else
-                return 0;
-        }       
-	}
-		 
-		List<Event> events = new ArrayList<Event>();
+                int res = this.val - o.val;
+                if (res < 0)
+                    return -1;
+                else if (res > 0)
+                    return 1;
+                else
+                    return 0;
+            }       
+	    }
+        
+        
+        List<Event> events = new ArrayList<Event>();
+        
 		for(int day = 0; day < 7; day++){
+            //Running Sum per event, init by adding values from each time index
+            //this minimizes array access later
+            int sum = 0;
+            for(int startTime = startConstraint; startTime < (startConstraint+meetingLength); startTime++){
+                sum += freeBusyTimes[day][startTime];
+            }
+
+
 			for(int start = startConstraint; start < endConstraint - meetingLength; start++){
-                int val = freeBusyTimes[day][start] + freeBusyTimes[day][start+1] + freeBusyTimes[day][start+ 2];
-                int nonAttendees = maxNonAttending(freeBusyTimes[day][start], freeBusyTimes[day][start+1], freeBusyTimes[day][start+ 2]);
-				events.add(new Event(start, start+meetingLength, day, val, nonAttendees));
+
+                int nonAttendees = maxNonAttending(freeBusyTimes, day, start, meetingLength);
+                events.add(new Event(start, start+meetingLength, day, sum, nonAttendees));
+                //Reduce running sum of non-attendees by the time index at start
+                sum -= freeBusyTimes[day][start];
+                /*Increase running sum of non-attendees by the time index at the end of the 
+                  time block (as long as its in range) */
+                if(start + meetingLength < (endConstraint - meetingLength)){
+                    sum += freeBusyTimes[day][start + meetingLength];
+                }
 			}
 		}
 
@@ -299,19 +333,27 @@ public class AutoEventProcessor extends HttpServlet {
                 "Day:   " + e.day
              +"\nStart: " + e.start
              +"\nEnd:   " + e.end
-             +"\nNon-attendees: " + e.nonAttending + "\n");
+             +"\nNon-attendees: " + e.nonAttending 
+             +"\nStartDate: " + e.startDate
+             +"\nEndDate:   " + e.endDate + "\n");
         }
+
         
+        
+        System.out.println(DateTime.now());
 		return "{\"result\": true}";
     }
     
-    private static int maxNonAttending(int day1, int day2, int day3){
-        List<Integer> nums = new ArrayList<Integer>();
-        nums.add(Integer.valueOf(day1)); nums.add(Integer.valueOf(day2)); nums.add(Integer.valueOf(day3));
-        Collections.sort(nums);
-        return nums.get(2);
-    }
 
+    private static int maxNonAttending(int[][] events, int day, int startHour, int range){
+        List<Integer> nums = new ArrayList<Integer>();
+        for(int i = startHour; i < startHour +range; i++){
+            nums.add(Integer.valueOf(events[day][i]));
+        }
+        Collections.sort(nums);
+        return nums.get(nums.size()-1);
+
+    }
 
 
 //===============================processFreeBusyTimes End ========================================//

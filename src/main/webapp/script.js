@@ -65,10 +65,14 @@ function calculateAutoEventTime(){
         url,
         {userList: json.userList, startRes: startRestriction, endRes: endRestriction, meetingLength: meetingLength},
         function(response){
-            alert("Ok");
             console.log(response);
+            alert("Ok");
+            
         }).fail(function(resposne){
-            alert("error");
+            
+            console.log(response);
+            alert("Oops, something went wrong, please try again...");
+            calculateAutoEventTime();
         });
 
 }

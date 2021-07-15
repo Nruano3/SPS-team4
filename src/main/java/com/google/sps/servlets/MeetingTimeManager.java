@@ -83,9 +83,7 @@ public class MeetingTimeManager extends HttpServlet {
         return input.replaceAll("\"", "");
     }
 
-    @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        /**
+    /**
          * Event Processing Algorithm:
          * 
          * 1. Determine users by email and retrieve all scheduling constraints
@@ -118,6 +116,9 @@ public class MeetingTimeManager extends HttpServlet {
          * dropped from result.
          */
 
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        
         // Set response content type: Json
         res.setContentType("application/json;");
 
@@ -168,6 +169,15 @@ public class MeetingTimeManager extends HttpServlet {
         doGet(req, res);
     }
 
+    /**
+     * 
+     * @throws ParseException
+     * @throws IOException
+     * @throws GeneralSecurityException
+     * 
+     * Adds A freshly created Google Calendar Service to static "calendars" ArrayList object
+     * for each registered user
+     */
     private static void getCalendars() throws ParseException, IOException, GeneralSecurityException {
         // Init the ArrayList of Calendars
         calendars = new ArrayList<Calendar>();
@@ -217,6 +227,17 @@ public class MeetingTimeManager extends HttpServlet {
         }
     }
 
+    /**
+     * 
+     * @param access_token
+     * @param HTTP_TRANSPORT
+     * @return com.google.api.services.calendar.Calendar
+     * @throws GeneralSecurityException
+     * @throws IOException
+     * 
+     * Creates a fresh Google Calendar "service" Object, for user defined by the passed
+     * access token and returns it
+     */
     private static Calendar getCalendarService(String access_token, HttpTransport HTTP_TRANSPORT)
             throws GeneralSecurityException, IOException {
 
@@ -241,11 +262,21 @@ public class MeetingTimeManager extends HttpServlet {
 
     }
 
-    // Builds Credential object for Calendar Service Builder
+    /**
+     * Builds Credential object for Calendar Service Builder
+     */
     private static Credential buildCreds(HttpTransport transport) {
         return new Credential(BearerToken.authorizationHeaderAccessMethod()).setFromTokenResponse(tokenResponse);
     }
 
+    /**
+     * 
+     * @throws JsonSyntaxException
+     * @throws IOException
+     * 
+     * Populates the Global freeBusyResponseTimes ArrayList with 
+     * parsed Google Calendar FreeBusyResponse values
+     */
     private static void getFreeBusyTimes() throws JsonSyntaxException, IOException {
 
         // Init the Free/Busy Array List
@@ -270,6 +301,16 @@ public class MeetingTimeManager extends HttpServlet {
         times = null;
     }
 
+    /**
+     * 
+     * @param service
+     * @return com.google.gson.JsonArray
+     * @throws JsonSyntaxException
+     * @throws IOException
+     * 
+     * Returns a Parsed Google Calendar FreeBusyResponse as a JsonArray. Picks out ONLY
+     * the Array labeled "busy" in the response
+     */
     private static JsonArray parseFreeBusyTimes(Calendar service) throws JsonSyntaxException, IOException {
 
         //Build and Execute a Free Busy request
@@ -280,6 +321,14 @@ public class MeetingTimeManager extends HttpServlet {
         
     }
 
+    /**
+     * 
+     * @param service
+     * @return com.google.api.services.calendar.model.FreeBusyResponse
+     * @throws IOException
+     * 
+     * Builds and Executes a Google Calendar FreeBusyRequest. Returns the response.
+     */
     private static FreeBusyResponse buildAndExecuteFreeBusyRequest(Calendar service) throws IOException {
     	//Build request
         FreeBusyRequest req = buildFreeBusyRequest();
@@ -291,6 +340,14 @@ public class MeetingTimeManager extends HttpServlet {
         return res;
     }
 
+    /**
+     * 
+     * @return om.google.api.services.calendar.model.FreeBusyRequest
+     * 
+     * Builds and returns a Google Calendar FreeBusyRequest for 
+     * a single Calendar Week starting from time of Request, currently only 
+     * requests for a user's "Primary" calendar
+     */
     private static FreeBusyRequest buildFreeBusyRequest(){
 
         //Calculate a Week in milliseconds NOTE: these could be global, but for readability they are calculated here
@@ -319,6 +376,10 @@ public class MeetingTimeManager extends HttpServlet {
         return req;
     }
 
+    /**
+     * Proccess all the "Busy" times in the FreeBusy response parsed into the 
+     * global freeBusyResponseTimes ArrayList
+     */
     private static void processFreeBusyTimes(){
 
         //Init the eventMatrix to resemble a "Week" with 24 hour "Days"
@@ -330,6 +391,14 @@ public class MeetingTimeManager extends HttpServlet {
         }
     }
 
+    /**
+     * 
+     * @param timeDate
+     * 
+     * Proccess the TimeDate object passed in, by extracting
+     * the Start day and time, as well as the End day and time
+     * and populates the Global eventMatrix
+     */
     private static void processTimeDateObject(JsonObject timeDate){
 
         //Retrieve Start and EndDates as a Joda DateTime object
@@ -349,11 +418,31 @@ public class MeetingTimeManager extends HttpServlet {
     	
     }
 
+    /**
+     * 
+     * @param timeOb
+     * @param time
+     * @return org.joda.time.DateTime
+     * 
+     * Proccesses a DateTime JsonObject by parsing the Date string in the field specified by "time"
+     * and creating a new Joda DateTime object
+     */
     private static DateTime processDate(JsonObject timeOb, String time){
         //Time Zones are Default RN, will update that later
     	return new DateTime(stripQuotes(timeOb.get(time).toString())).withZone(DateTimeZone.forID("America/Los_Angeles"));
     }
 
+    /**
+     * 
+     * @param startDay
+     * @param startTime
+     * @param endDay
+     * @param endTime
+     * 
+     * Given a pair of Start Coordinates and End Coordinates, populates the eventMatrix
+     * by incremeting each index in the specified range by 1. This value indicates 
+     * an invitee that is unable to attend an event at this time slot
+     */
     private static void populateEventMatrix(int startDay, int startTime, int endDay, int endTime){
 
         while((startTime!= endTime) || (startDay != endDay)){
@@ -376,6 +465,15 @@ public class MeetingTimeManager extends HttpServlet {
     }
 
 
+    /**
+     * Proccess the global eventMatrix, by looking at each possible 
+     * Event range, specified by user input, and creating an event with all
+     * possible information, such as Start Day, Start Time, End Time,
+     * Amount of Non-attendees, Largest amount of Non-attendees 
+     * for any given time slot during the event. Then populates
+     * the global events ArrayList with each event created this way,
+     * as long as at least 50% can fully attend.
+     */
     private static void processEventMatrix(){
 
         //Init Event ArrayList
@@ -404,8 +502,10 @@ public class MeetingTimeManager extends HttpServlet {
                 //calculate the end time in hours 
                 newMeetingEndTime = start + meetingLength;
 
-                //Create and add event to Event ArrayList
-                events.add(new Event(start, newMeetingEndTime, day, sum, nonAttendees));
+                //Create and add event to Event ArrayList only if MORE than 50% can attend
+                if(nonAttendees < (numberOfInvitees / (2.0))) {
+                    events.add(new Event(start, newMeetingEndTime, day, sum, nonAttendees));
+                }
 
                 //Reduce running sum of non-attendees by the time index at start
                 sum -= eventMatrix[day][start];

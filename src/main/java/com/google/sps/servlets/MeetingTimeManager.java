@@ -39,7 +39,16 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 /**
- * Class: MeetingTimeManager Descrip
+ * Class: MeetingTimeManager
+ * Description:
+ * This Servlet processes: List of user email addresses,
+ *                         Meeting Constraints: start
+ *                                              end
+ *                                              length
+ * It uses this information to determine a list of meeting 
+ * times that will allow a majority of invitees to attend
+ * that given event, based on their availability from 
+ * their "Primary" google calendar.
  */
 @WebServlet("/process-user-data")
 public class MeetingTimeManager extends HttpServlet {

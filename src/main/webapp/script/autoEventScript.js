@@ -1,6 +1,7 @@
 
 async function addCurrentUser(){
 
+   
     if(!sessionStorage.user){
         if(!gapi.auth2) loadGapi();
         var auth2 = await gapi.auth2.getAuthInstance();
@@ -9,11 +10,12 @@ async function addCurrentUser(){
         
         addUserToList(sessionStorage.user);
     }else{
+
         addUserToList(sessionStorage.user);
     }
 }
 
-addCurrentUser();
+
 
 function addUser(){
    
@@ -142,7 +144,7 @@ function setActive(event){
     parentNode.className += "active"
     console.log(parentNode);
 }
-function createAutoEvent(){
+async function createAutoEvent(){
     //Get list of autoTime elements, find which one is active
 
     var activeTimeSelection = document.getElementsByClassName('timeactive');
@@ -162,9 +164,101 @@ function createAutoEvent(){
 
     var activeSelection = activeTimeSelection[0];
     var selectionIndex = activeSelection.id.match(/(\d+)/)[0];
-    console.log(selectionIndex);
+
+    var eventJson = eventTimeList[selectionIndex];
+
+    //Adjust hour for timezone
+    var startTime = parseDate(eventJson.startDate);
+    var endTime = parseDate(eventJson.endDate);
+    
+    /**
+     * Adjust the date up a week if weekday of 
+     * event comes before today (ie today is thurs, event is tues)
+     */
+    const today = new Date(Date.now());
+    if(today.getDay() > startTime.getDay()){
+        startTime.setDate(startTime.getDate()+7);
+        endTime.setDate(endTime.getDate()+7);
+    }
 
     
-    //Get Start Date, End Date, Event Title, Invitee List, 
-}
+
+    var addedUserList = document.querySelectorAll('.addedUserEmail');
+    var inviteeList = [];
+    addedUserList.forEach(function(item){
+       
+        inviteeList.push({'email': item.innerText})
         
+    });
+
+    if(!gapi.auth2) loadGapi();
+    var authInstance = await gapi.auth2.getAuthInstance();  
+    var user = await authInstance.currentUser.get();
+    var profile = await user.getBasicProfile();
+
+    var title = document.getElementById('auto-event-title').value;
+    if(!title){
+        title = "Meeting Manager Event: " + profile.getName();
+    }
+    var colorId = document.getElementById('auto-event-color-input').value;
+    if(isNaN(colorId)) colorId = 7;
+    //Get Start Date, End Date, Event Title, Invitee List,
+    var event = {
+        'kind' : 'calendar#event',
+        'summary': title,
+        'colorId' : colorId,
+        'creator': {
+            'id': profile.getId(),
+            'email': profile.getEmail(),
+            'displayName': profile.getName(),
+            "self": true
+        },
+        'organizer': {
+            'id': profile.getId(),
+            'email': profile.getEmail(),
+            "displayName": await profile.getName(),
+            "self": true
+        },
+        'start' : {
+            'dateTime': startTime.toISOString(),
+            'timeZone': eventJson.startDate.iChronology.iBase.iParam.iID
+        },
+        'end': {
+            'dateTime': endTime.toISOString(),
+            'timeZone': eventJson.endDate.iChronology.iBase.iParam.iID
+        },
+        'attendees': inviteeList
+    }
+
+    console.log(event);
+    
+
+    gapi.client.load("calendar", "v3", function(){
+        var request = gapi.client.calendar.events.insert({
+            'calendarId': 'primary',
+            'resource': event
+        });
+        request.execute(function(event){
+            console.log("Event Created: " + event.htmlLink);
+            alert("Your event has been submitted and will be added to your calendar."); //alerts user that form is submitted
+           
+        }), function(event){
+            console.log("error");
+        }        
+    });
+}
+
+/**
+ * 
+ * @param {Date} date
+ * 
+ * Adjusts the Hour of the event to take into accout the TimeZone offset 
+ */
+function parseDate(date){
+    var temp = new Date(date.iMillis);
+    var off = new Date();
+    var offset = off.getTimezoneOffset() / 60;
+    temp.setHours(temp.getHours() + offset);
+    console.log("Temp: " + temp);
+    return temp;
+}

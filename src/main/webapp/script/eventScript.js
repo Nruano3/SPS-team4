@@ -64,7 +64,7 @@ async function createEvent(event){
 
     //Prevents page from reloading
     event.preventDefault();
-    console.log("TEST");
+    
     const date = new Date();
     const offset = date.getTimezoneOffset() / 60;
     
@@ -102,7 +102,7 @@ async function createEvent(event){
         },
         'end': {
             'dateTime': endTime
-        }        
+        }      
     }
 
     gapi.client.load("calendar", "v3", function(){

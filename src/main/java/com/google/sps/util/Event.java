@@ -10,8 +10,8 @@ public class Event implements Comparable<Event> {
     public int day;
     public int val;
     public int nonAttending;
-    public String startDate;
-    public String endDate;
+    public DateTime startDate;
+    public DateTime endDate;
 
     public Event(int start, int end, int day, int val, int nonAttending) {
         this.start = start;
@@ -20,15 +20,17 @@ public class Event implements Comparable<Event> {
         this.val = val;
         this.nonAttending = nonAttending;
 
-        DateTime startDate = DateTime.now();
+        DateTime startDate = new DateTime();
+        startDate = startDate.minuteOfHour().setCopy(0);
         startDate = startDate.hourOfDay().setCopy(this.start);
         startDate = startDate.dayOfWeek().setCopy(this.day);
-        this.startDate = startDate.withZone(DateTimeZone.forID("America/Los_Angeles")).toString();
+        this.startDate = startDate.withZone(DateTimeZone.getDefault());
 
-        DateTime endDate = DateTime.now();
+        DateTime endDate = new DateTime();
+        endDate = endDate.minuteOfHour().setCopy(0);
         endDate = endDate.hourOfDay().setCopy(this.end);
         endDate = endDate.dayOfWeek().setCopy(this.day);
-        this.endDate = endDate.withZone(DateTimeZone.forID("America/Los_Angeles")).toString();
+        this.endDate = endDate.withZone(DateTimeZone.getDefault());
 
     }
 

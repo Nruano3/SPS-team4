@@ -2,6 +2,11 @@
     width: 800px;
 }
 
+.autoEventInit {
+    display: flex;
+}
+
+
 .autoEventInit .card.grid {
     grid-template-columns: repeat(6, 1fr);
     
@@ -21,7 +26,6 @@
     padding: 10px;
    
 }
-
 
 .autoEventInput.title:focus {
     outline: none;
@@ -74,4 +78,35 @@
     height: 90px;
     width: 100%;
     overflow-y: scroll;
+}
+
+
+#auto-times {
+    
+    justify-items: space-around;
+    height: 150px;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+
+.userContent .event .time,
+.userContent .event .timeactive {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    height: 15px;
+    margin: 15px 0;
+    padding: 15px 0;
+}
+
+
+.timeactive p {
+    padding: 10px 10px;
+    outline: none;
+    border-bottom: 3px solid var(--primary-color);
+    border-radius: 10px;
+    background-color: lightgray;
+    transition: 0.5s ease all; 
 }

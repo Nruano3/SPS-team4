@@ -224,7 +224,7 @@ public class MeetingTimeManager extends HttpServlet {
                 } catch (Exception e) {
                     // Allowed Retrys per run is set to number of invitees to prevent any inifinite
                     // loops
-                    if (retryCounter < numberOfInvitees) {
+                    if (retryCounter < 10) {
                         retryCounter++;
                         getCalendars();
                     } else {
@@ -513,7 +513,7 @@ public class MeetingTimeManager extends HttpServlet {
                 int nonAttendees = maxNonAttending(day, start);
 
                 //calculate the end time in hours 
-                newMeetingEndTime = start + meetingLength;
+                newMeetingEndTime = start + (meetingLength);
 
                 //Create and add event to Event ArrayList only if MORE than 50% can attend
                 if(nonAttendees < (numberOfInvitees / (2.0))) {
@@ -525,9 +525,9 @@ public class MeetingTimeManager extends HttpServlet {
 
                 /*Increase running sum of non-attendees by the time index at the end of the 
                   time block (as long as its in range) */
-                if(start + meetingLength < (endConstraint - meetingLength)){
-                    sum += eventMatrix[day][newMeetingEndTime + 1];
-                }
+                
+                sum += eventMatrix[day][newMeetingEndTime];
+                
 			}
 		}
     }

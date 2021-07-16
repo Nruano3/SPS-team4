@@ -248,13 +248,16 @@ async function loadUserData() {
         console.log('Name: ' + profile.getName());
         console.log('Image URL: ' + profile.getImageUrl());
         console.log('Email: ' + profile.getEmail());
-        sessionStorage.user = await profile.getEmail();
+        
+        
+        
         //Display User Content
         $('#userContent').attr('style', 'display: grid');
         document.getElementById('userImg').src = profile.getImageUrl();
         document.getElementById('name').innerText = user.getBasicProfile().getName();
         document.getElementById('email').innerText = user.getBasicProfile().getEmail();
-
+        sessionStorage.user = await profile.getEmail();
+        await addCurrentUser();
         //Init the calendar
         initializeCalendar();
 
@@ -267,7 +270,8 @@ async function loadUserData() {
         $('#signOutButton').attr('style', 'display: grid');
 
     }catch(err){
-        onLoginSuccess();
+        resetSession();
+        window.location.reload();
     }
 }
 

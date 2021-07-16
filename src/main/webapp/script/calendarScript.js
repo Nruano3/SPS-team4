@@ -48,6 +48,7 @@ function populateCalendar(calDate) {
             'orderBy': 'startTime'
         }).then(function (response) {
             var events = response.result.items;
+            
             displayMonth(events);
             if (events.length > 0) {
                 for (i = 0; i < events.length; i++) {

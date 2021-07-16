@@ -65,9 +65,9 @@
                             </div>
                             
                             <div class="gridItem">
-                                <img src="clock.ico" style="margin: 10px; height: 20px; display: inline-block; vertical-align: middle"></i><p style="display: inline-block;">Time Frame:</p>
+                                <img src="clock.ico" style="margin: 10px; height: 20px; display: inline-block; vertical-align: middle"><p style="display: inline-block;">Time Frame:</p>
                                 <select class="autoEventInput" id="auto-start-constraint" data-initial-value="9:00am">
-                                    <option value="" disabled selected>9:00am</option>
+                                    <option value=9 disabled selected>9:00am</option>
                                             <option value=0>12:00am</option><option value=1>1:00am</option><option value=2>2:00am</option>
                                             <option value=3>3:00am</option><option value=4>4:00am</option><option value=5>5:00am</option>
                                             <option value=6>6:00am</option><option value=7>7:00am</option><option value=8>8:00am</option>
@@ -80,7 +80,7 @@
                            
                                 <span style='font-size: 30px; margin: 10px;'> - </span>
                                 <select class="autoEventInput" id="auto-end-constraint" placeholder="5:00pm">
-                                    <option value="" disabled selected>5:00pm</option>
+                                    <option value=17 disabled selected>5:00pm</option>
                                             <option value=0>12:00am</option><option value=1>1:00am</option><option value=2>2:00am</option>
                                             <option value=3>3:00am</option><option value=4>4:00am</option><option value=5>5:00am</option>
                                             <option value=6>6:00am</option><option value=7>7:00am</option><option value=8>8:00am</option>
@@ -94,6 +94,7 @@
                            <div class="gridItem">
                                <p style="display: inline-block;">Length:</p>
                                 <select class="autoEventInput meetingLength" type="text" id="auto-event-length" placeholder="Meeting Length">
+                                    <option value=1 disabled selected>1 hour(s)</option>
                                     <option value=1>1 hour(s)</option><option value=2>2 hour(s)</option><option value=3>3 hour(s)</option>
                                     <option value=4>4 hour(s)</option><option value=5>5 hour(s)</option><option value=6>6 hour(s)</option>
                                     <option value=7>7 hour(s)</option><option value=8>8 hour(s)</option><option value=9>9 hour(s)</option>
@@ -114,15 +115,45 @@
                            <div class="gridItem" id="addedUsers">
                                
                            </div>
-                           <div><button class="btn" onclick="calculateAutoEventTime()">Submit</button></div>
+                           <div>
+                               <button class="btn" onclick="calculateAutoEventTime()">Submit</button>
+                            </div>
                         </div>
                         
                 </div>
 
 
                 <div class="autoEventFinal">
-                    <div class="card grid grid-2">
-                    
+                    <div class="card">
+                        <div class="gridItem label">
+                                <h2>Create New Auto Event</h2>
+                        </div>
+                        <div class="gridItem">
+                            <h4 class="auto-event-time" id="auto-event-time">Here's some meeting times: </h4>
+                            <div id="auto-times">
+                                <!--Style: Scroll, Populate with Translated Times, Onclick => set Chosen Event Time-->
+                            </div>
+                        </div>
+                        <div>
+                           
+                            <select id="auto-event-color-input" placeholder="Event Color">
+                                    <option value="undefined">Default</option>
+                                    <option value="1" id = "lavender">Lavender</option>
+                                    <option value="2" id = "sage">Sage</option>
+                                    <option value="3" id = "grape">Grape</option>
+                                    <option value="4" id = "flamingo">Flamingo</option>
+                                    <option value="5" id = "banana">Banana</option>
+                                    <option value="6" id = "tangerine">Tangerine</option>
+                                    <option value="8" id = "graphite">Graphite</option>
+                                    <option value="9" id = "blueberry">Blueberry</option>
+                                    <option value="10" id = "basil">Basil</option>
+                                    <option value="11" id = "tomato">Tomato</option>
+                                </select>
+                        </div>
+                        <div>
+                               <button class="btn" onclick="createAutoEvent()">Create</button>
+                            </div>
+
                     </div>
                 </div>
             </div>

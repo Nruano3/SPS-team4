@@ -102,7 +102,7 @@ async function createEvent(event){
         },
         'end': {
             'dateTime': endTime
-        }
+        }        
     }
 
     gapi.client.load("calendar", "v3", function(){

@@ -139,12 +139,12 @@ function signInCallback(authResult) {
             }
         })
         
+        
+        var baseUrl = window.location.protocol + "//" + window.location.hostname + '/GAuthCallback';
         $.post(
-            'https://8080-cs-1084074782278-default.cs-us-west1-ijlt.cloudshell.dev/GAuthCallback',
+            baseUrl,
             {code: authResult['code']},
             function(response){
-
-                console.log(response);
                 onLoginSuccess();
                 
             }).fail(function(resposne){

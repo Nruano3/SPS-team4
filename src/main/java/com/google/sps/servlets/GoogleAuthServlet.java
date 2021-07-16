@@ -57,6 +57,11 @@ public class GoogleAuthServlet extends HttpServlet{
              response.sendRedirect(request.getContextPath() + "/index.html");
 
         }
+        //Error handling if permissions not given
+        if(request.getParameter("error") != null){
+            response.sendRedirect(request.getContextPath() + "/index.html");
+            return;
+        }
         String authCode = request.getParameter("code");
         
          APP_CREDENTIALS = CredentialManager.setCredentials(CREDENTIALS_PATH);

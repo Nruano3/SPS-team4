@@ -15,7 +15,22 @@ async function addCurrentUser(){
     }
 }
 
+function back(event){
+   
+    $('.backBtn').attr('style', 'display: none');
+    $('.forwardBtn').attr('style', 'display: inline-block');
+    
+    $('.autoEventInit').attr('style', 'display: flex');
+    $('.autoEventFinal').attr('style', 'display: none');
+    
+}
 
+function forward(event){
+    $('.autoEventInit').attr('style', 'display: none');
+    $('.autoEventFinal').attr('style', 'display: flex');
+    $('.backBtn').attr('style', 'display: inline-block');
+    $('.forwardBtn').attr('style', 'display: none');
+}
 
 function addUser(){
    
@@ -89,7 +104,13 @@ function populateEventTimes(response){
     
     $('.autoEventInit').attr('style', 'display: none');
     $('.autoEventFinal').attr('style', 'display: flex');
+    $('.backBtn').attr('style', 'display: inline-block');
+    $('.forwardBtn').attr('style', 'display: none');
 
+    
+    eventTimeList = [];
+    clearTimes();
+    clearTimes();
     response.forEach(element => {
         eventTimeList.push(element);    
     });
@@ -132,7 +153,15 @@ function addAutoTime(element, index){
     autoEventTimeContainer.appendChild(newTime);
 
 }
-        
+
+function clearTimes(){
+    var times = document.getElementById('auto-times');
+    var childNodes = times.childNodes;
+    childNodes.forEach(node => {
+        console.log(node);
+        node.parentNode.removeChild(node);
+    })    
+}
 function setActive(event){
     event.preventDefault();
     var parentNode = event.target.parentNode;

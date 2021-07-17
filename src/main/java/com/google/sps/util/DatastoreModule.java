@@ -60,10 +60,10 @@ public class DatastoreModule {
          * with all required fields Add entity to the store Note: Elements from Json
          * objects may get returned with Quotes "", scrub them of the quotes if needed
          */
-
+        Entity userEntity;
         keyFactory = dataStore.newKeyFactory().setKind("UserProfile");
         if (dataStore.get(keyFactory.newKey(stripQuotes(userInfo.get("id").toString()))) == null) {
-            Entity userEntity;
+            
             if (userInfo.has("email")) {
                userEntity = Entity.newBuilder(keyFactory.newKey(stripQuotes(userInfo.get("id").toString())))
                         .set("id", stripQuotes(userInfo.get("id").toString()))
@@ -94,11 +94,12 @@ public class DatastoreModule {
          * "refresh_token" "scope": "scopes" "token_type": "token_type" "expires_in":
          * "expiration in seconds" }
          */
-
+        Entity credentialEntity;
         keyFactory = dataStore.newKeyFactory().setKind("UserCredentials");
         long timeStampInSeconds = System.currentTimeMillis() / 1000;
+        //If not in datastore, add to store
         if (dataStore.get(keyFactory.newKey(profileId)) == null) {
-            Entity credentialEntity = Entity.newBuilder(keyFactory.newKey(profileId))
+            credentialEntity = Entity.newBuilder(keyFactory.newKey(profileId))
                     .set("timestamp", timeStampInSeconds).set("id", profileId)
                     .set("access_token", stripQuotes(userCredentials.get("access_token").toString()))
                     .set("refresh_token",stripQuotes(userCredentials.get("refresh_token").toString()))
@@ -108,6 +109,20 @@ public class DatastoreModule {
                     .set("id_token", stripQuotes(userCredentials.get("id_token").toString())).build();
 
             dataStore.add(credentialEntity);
+        } else {
+            //Otherwise, update whats there
+            credentialEntity = dataStore.get(keyFactory.newKey(profileId));
+
+            Entity newCreds = Entity.newBuilder(credentialEntity).set("timestamp", timeStampInSeconds).set("id", profileId)
+                    .set("access_token", stripQuotes(userCredentials.get("access_token").toString()))
+                    .set("refresh_token",stripQuotes(userCredentials.get("refresh_token").toString()))
+                    .set("scope", stripQuotes(userCredentials.get("scope").toString()))
+                    .set("token_type",stripQuotes(userCredentials.get("token_type").toString()))
+                    .set("expires_in",stripQuotes(userCredentials.get("expires_in").toString()))
+                    .set("id_token", stripQuotes(userCredentials.get("id_token").toString())).build();
+
+                    dataStore.update(newCreds);
+
         }
 
     }
@@ -218,21 +233,24 @@ public class DatastoreModule {
 
         // Modify the result into something usable (ie: JsonObject)
         JsonObject responseJson = new Gson().fromJson(response, JsonObject.class);
+        if(!responseJson.has("error")){
+             // Extract usable parts (separeted for readability)
+            String newAccessToken = stripQuotes(responseJson.get("access_token").toString());
+            String newExpiresIn = stripQuotes(responseJson.get("expires_in").toString());
+            String newIdToken = stripQuotes(responseJson.get("id_token").toString());
+            String newScope = stripQuotes(responseJson.get("scope").toString());
+            long newTimeStampInSeconds = System.currentTimeMillis() / 1000;
 
-        // Extract usable parts (separeted for readability)
-        String newAccessToken = stripQuotes(responseJson.get("access_token").toString());
-        String newExpiresIn = stripQuotes(responseJson.get("expires_in").toString());
-        String newIdToken = stripQuotes(responseJson.get("id_token").toString());
-        String newScope = stripQuotes(responseJson.get("scope").toString());
-        long newTimeStampInSeconds = System.currentTimeMillis() / 1000;
+            // Build a new Entity based off the Old Entity
+            Entity newCreds = Entity.newBuilder(userCredentials).set("access_token", newAccessToken)
+                    .set("timestamp", newTimeStampInSeconds).set("expires_in", newExpiresIn).set("id_token", newIdToken)
+                    .set("scope", newScope).build();
 
-        // Build a new Entity based off the Old Entity
-        Entity newCreds = Entity.newBuilder(userCredentials).set("access_token", newAccessToken)
-                .set("timestamp", newTimeStampInSeconds).set("expires_in", newExpiresIn).set("id_token", newIdToken)
-                .set("scope", newScope).build();
+            // Update the entity
+            dataStore.update(newCreds);
 
-        // Update the entity
-        dataStore.update(newCreds);
+        }
+       
 
     }
 

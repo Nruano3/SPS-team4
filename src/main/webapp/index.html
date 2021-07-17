@@ -58,6 +58,7 @@
                         
                         <div class="card">
                             <div class="gridItem label">
+                                <button class="forwardBtn" id="forwardBtn" onclick="forward(event)" style="display: none;">Forward</button>
                                 <h2>Create New Auto Event</h2>
                             </div>
                             <div class="gridItem">
@@ -127,18 +128,17 @@
                     <div class="card">
                         <div class="gridItem label">
                                 <button class="backBtn" id="backBtn" onclick="back(event)" style="display: none;">Back</button>
-                                <button class="forwardBtn" id="forwardBtn" onclick="forward(event)" style="display: none;">Forward</button>
                                 <h2>Create New Auto Event</h2>
                         </div>
                         <div class="gridItem">
-                            <h4 class="auto-event-time" id="auto-event-time">Here's some meeting times: </h4>
+                            <h4 class="auto-event-time" id="auto-event-time" style="margin: 5px;">Here's some meeting times: </h4>
                             <div id="auto-times">
                                 <!--Style: Scroll, Populate with Translated Times, Onclick => set Chosen Event Time-->
                             </div>
                         </div>
                         <div>
-                           
-                            <select id="auto-event-color-input" placeholder="Event Color">
+                            <div id ="indicator"></div>
+                            <select id="auto-event-color-input" class="autoEventInput" placeholder="Event Color" onclick="updateIndicator()">
                                     <option value="undefined">Default</option>
                                     <option value="1" id = "lavender">Lavender</option>
                                     <option value="2" id = "sage">Sage</option>

@@ -16,13 +16,11 @@ async function addCurrentUser(){
 }
 
 function back(event){
-   
-    $('.backBtn').attr('style', 'display: none');
-    $('.forwardBtn').attr('style', 'display: inline-block');
-    
+
     $('.autoEventInit').attr('style', 'display: flex');
     $('.autoEventFinal').attr('style', 'display: none');
-    
+    $('.backBtn').attr('style', 'display: none');
+    $('.forwardBtn').attr('style', 'display: inline-block'); 
 }
 
 function forward(event){
@@ -80,11 +78,17 @@ function calculateAutoEventTime(){
     var startRestriction = document.getElementById('auto-start-constraint').value;
     var endRestriction = document.getElementById('auto-end-constraint').value;
     var meetingLength = document.getElementById('auto-event-length').value;
-    var url = 'https://8080-cs-1084074782278-default.cs-us-west1-ijlt.cloudshell.dev/process-user-data';
+    
 
+    $.ajaxSetup({
+            headers:{
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+    });
 
+    var baseUrl = window.location.protocol + "//" + window.location.hostname + '/process-user-data';
     $.post(
-        url,
+        baseUrl,
         {userList: json.userList, startRes: startRestriction, endRes: endRestriction, meetingLength: meetingLength},
         function(response){
             console.log(response);
@@ -101,7 +105,7 @@ function calculateAutoEventTime(){
 
 var eventTimeList = [];
 function populateEventTimes(response){
-    
+    clearTimes();
     $('.autoEventInit').attr('style', 'display: none');
     $('.autoEventFinal').attr('style', 'display: flex');
     $('.backBtn').attr('style', 'display: inline-block');
@@ -109,8 +113,7 @@ function populateEventTimes(response){
 
     
     eventTimeList = [];
-    clearTimes();
-    clearTimes();
+    
     response.forEach(element => {
         eventTimeList.push(element);    
     });
@@ -156,11 +159,7 @@ function addAutoTime(element, index){
 
 function clearTimes(){
     var times = document.getElementById('auto-times');
-    var childNodes = times.childNodes;
-    childNodes.forEach(node => {
-        console.log(node);
-        node.parentNode.removeChild(node);
-    })    
+    times.innerHTML = "";
 }
 function setActive(event){
     event.preventDefault();
@@ -290,4 +289,12 @@ function parseDate(date){
     temp.setHours(temp.getHours() + offset);
     console.log("Temp: " + temp);
     return temp;
+}
+
+var googleColors = [' ', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#039be5', '#616161', '#3f51b5', '#0b8043', '#d60000'  ];
+function updateIndicator(){
+    var indicator = document.getElementById('indicator');
+    var colorId = document.getElementById('auto-event-color-input').value;
+    if (colorId == "undefined" || (!colorId)) colorId = 7;
+    indicator.style.backgroundColor = googleColors[colorId];
 }

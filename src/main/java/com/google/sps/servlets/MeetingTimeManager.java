@@ -188,10 +188,13 @@ public class MeetingTimeManager extends HttpServlet {
      * @throws IOException
      * @throws GeneralSecurityException
      * 
-     * Adds A freshly created Google Calendar Service to static "calendars" ArrayList object
-     * for each registered user
+     *                                  Adds A freshly created Google Calendar
+     *                                  Service to static "calendars" ArrayList
+     *                                  object for each registered user
+     * @throws InterruptedException
      */
-    private static void getCalendars() throws ParseException, IOException, GeneralSecurityException {
+    private static void getCalendars()
+            throws ParseException, IOException, GeneralSecurityException {
         // Init the ArrayList of Calendars
         calendars = new ArrayList<Calendar>();
 
@@ -226,6 +229,13 @@ public class MeetingTimeManager extends HttpServlet {
                     // loops
                     if (retryCounter < 10) {
                         retryCounter++;
+                        try{
+                            Thread.sleep(1000);
+                        } catch (Exception ex)
+                        {
+                            System.out.println(e);
+                        }
+                        System.out.println("Retry");
                         getCalendars();
                     } else {
                         e.printStackTrace();
@@ -349,7 +359,6 @@ public class MeetingTimeManager extends HttpServlet {
         Freebusy.Query query = service.freebusy().query(req);
         //execute query/request
         FreeBusyResponse res = query.execute();
-
         return res;
     }
 

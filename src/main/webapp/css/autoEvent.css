@@ -4,6 +4,7 @@
 
 .autoEventInit {
     display: flex;
+    height: 600px;
 }
 
 
@@ -72,6 +73,7 @@
 .autoEventFinal{
     display: none;
     height: 585px;
+    margin: 7.5px 0;
 }
 
 #addedUsers {

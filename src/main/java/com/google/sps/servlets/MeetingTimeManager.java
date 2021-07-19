@@ -86,6 +86,12 @@ public class MeetingTimeManager extends HttpServlet {
     // redirect
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
+        calendars = null;
+        tokenResponse = null;
+        freeBusyResponseTimes = null;
+        eventMatrix = null;
+        events = null;
+
     }
 
     // Helper function to strip any Strings of un-needed quotes
@@ -188,10 +194,13 @@ public class MeetingTimeManager extends HttpServlet {
      * @throws IOException
      * @throws GeneralSecurityException
      * 
-     * Adds A freshly created Google Calendar Service to static "calendars" ArrayList object
-     * for each registered user
+     *                                  Adds A freshly created Google Calendar
+     *                                  Service to static "calendars" ArrayList
+     *                                  object for each registered user
+     * @throws InterruptedException
      */
-    private static void getCalendars() throws ParseException, IOException, GeneralSecurityException {
+    private static void getCalendars()
+            throws ParseException, IOException, GeneralSecurityException {
         // Init the ArrayList of Calendars
         calendars = new ArrayList<Calendar>();
 
@@ -208,7 +217,11 @@ public class MeetingTimeManager extends HttpServlet {
             // If access_token does not exist, this means user is not register with app
             if (access_token == null || access_token.equals("")) {
                 System.out.println("User: " + userEmail + " is not Registered");
-            } else {
+                //Decrement "numberOfInvitees", so the algorithm processes proper threshold of attendees
+                numberOfInvitees--;
+                
+            } 
+            else {
 
                 try {
 
@@ -219,18 +232,28 @@ public class MeetingTimeManager extends HttpServlet {
                     Calendar service = getCalendarService(access_token, HTTP_TRANSPORT);
 
                     // Add calendar to calendar list
-                    calendars.add(service);
+                    if(service != null)
+                        calendars.add(service);
 
-                } catch (Exception e) {
+                } 
+                catch (Exception e) {
                     // Allowed Retrys per run is set to number of invitees to prevent any inifinite
                     // loops
                     if (retryCounter < 10) {
                         retryCounter++;
+                        try{
+                            Thread.sleep(1000);
+                        } catch (Exception ex)
+                        {
+                            System.out.println(ex);
+                        }
+                        System.out.println("Retry");
                         getCalendars();
                     } else {
                         e.printStackTrace();
                     }
-                } finally {
+                } 
+                finally {
                     // reset retry counter upon success
                     retryCounter = 0;
                 }
@@ -271,7 +294,15 @@ public class MeetingTimeManager extends HttpServlet {
         Credential cred = buildCreds(HTTP_TRANSPORT);
 
         // Build and return calendar service
-        return new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName(APPLICATION_NAME).build();
+        try{
+            Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName(APPLICATION_NAME).build();
+            return service;
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        
+        return null;
 
     }
 
@@ -349,7 +380,6 @@ public class MeetingTimeManager extends HttpServlet {
         Freebusy.Query query = service.freebusy().query(req);
         //execute query/request
         FreeBusyResponse res = query.execute();
-
         return res;
     }
 

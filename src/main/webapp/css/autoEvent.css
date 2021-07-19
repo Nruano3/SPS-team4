@@ -4,6 +4,7 @@
 
 .autoEventInit {
     display: flex;
+    height: 600px;
 }
 
 
@@ -71,6 +72,8 @@
 }
 .autoEventFinal{
     display: none;
+    height: 585px;
+    margin: 7.5px 0;
 }
 
 #addedUsers {
@@ -84,7 +87,8 @@
 #auto-times {
     
     justify-items: space-around;
-    height: 150px;
+    outline: 2px solid var(--primary-color);
+    height: 300px;
     width: 100%;
     overflow-y: scroll;
 }
@@ -107,6 +111,34 @@
     outline: none;
     border-bottom: 3px solid var(--primary-color);
     border-radius: 10px;
+    background-color: lightgray;
+    transition: 0.5s ease all; 
+}
+
+
+#indicator {
+    height:16px; 
+    width:16px; 
+    display: inline-block; 
+    background-color: #039be5;
+    border-radius: 4px;
+}
+
+#forwardBtn,
+#backBtn {
+    width: 40px;
+    background: none;
+    color: var(--primary-color);
+    border: none;
+    border-bottom: 1px soild var(--primary-color);
+}
+
+#forwardBtn:hover,
+#backBtn:hover {
+    background: none;
+    color: var(--light);
+    border: none;
+    border-bottom: 1px soild var(--light);
     background-color: lightgray;
     transition: 0.5s ease all; 
 }

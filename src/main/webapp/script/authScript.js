@@ -72,9 +72,13 @@ async function auth2Init(){
         document.getElementById('signInButton').onclick = function() {             
             AUTH2.grantOfflineAccess().then(signInCallback);          
         }
+        document.getElementById('getStartedButton').onclick = function() {             
+            AUTH2.grantOfflineAccess().then(signInCallback);          
+        }
         //This should attach the Auth instance to global variable auth2
         auth2 = AUTH2;
         $('#signInButton').attr('style', 'display: grid');
+         $('#getStartedButton').attr('style', 'display: grid');
     });
 	
 }
@@ -139,12 +143,12 @@ function signInCallback(authResult) {
             }
         })
         
+        
+        var baseUrl = window.location.protocol + "//" + window.location.hostname + '/GAuthCallback';
         $.post(
-            'https://8080-cs-1084074782278-default.cs-us-west1-ijlt.cloudshell.dev/GAuthCallback',
+            baseUrl,
             {code: authResult['code']},
             function(response){
-
-                console.log(response);
                 onLoginSuccess();
                 
             }).fail(function(resposne){
@@ -236,6 +240,7 @@ async function onLoginSuccess(){
  */
 async function loadUserData() {
     
+    hideLogin();
     loadGapi();
     auth2 = await gapi.auth2.getAuthInstance();
 
@@ -275,6 +280,14 @@ async function loadUserData() {
     }
 }
 
+function hideLogin(){
+    $('#loginContent').attr('style', 'display: none');
+}
+
+function showLogin(){
+    $('#loginContent').attr('style', 'display: grid');
+}
+
 
 //Effectively signs out user from site
 async function signOut() {
@@ -289,6 +302,7 @@ async function signOut() {
         $('#userContent').attr('style', 'display: none');
         $('#signInButton').attr('style', 'display: grid');
         $('#signOutButton').attr('style', 'display: none');
+        showLogin();
     });
         
 

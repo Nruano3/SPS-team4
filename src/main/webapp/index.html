@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/login.css">
     <link rel="stylesheet" href="css/utility.css">
     <link rel="stylesheet" href="css/userContent.css">
     <link rel="stylesheet" href="css/autoEvent.css">
     <link rel="shortcut icon" type="image/jpg" href="/mmIcoDark.png"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>SPS-team4</title>
     <meta name="google-signin-client_id"
         content="569803275461-e4n2du96d1b8mps300gh834sr3es88j1.apps.googleusercontent.com">
@@ -35,6 +37,27 @@
     </div>
 
     
+    <div id="loginContent" class="loginContent">
+        <div class="container grid grid-2 card">
+            <div class="flex header" style="vertical-align: middle;">
+                <img src="/mmIcoDark.png" style="display: inline-block; height: 40px; width: 45px; margin-top: 5px;"><p style="font-size: 40px; margin: 0 10px"> | </p>
+                <h1> Meeting Manager</h1>
+            </div>
+            <p class="loginDescription">
+                Welcome to Summer 2021 SPS Team 4's
+                Meeting Manager App! This app is designed to 
+                automate meeting and event scheduling. These 
+                range from Work Meetings to Study Groups. Using Google 
+                Calendars, this process is made simple and 
+                cross platform. Have your group members 
+                register with Meeting Manager today and get
+                started!
+            </p>
+            <button class="btn card grid grid-3" id="getStartedButton"><img src="Google__G__Logo.png"><p><strong>Get Started with Google</strong></p></button>
+        </div>
+
+
+    </div>
 
     <div id="userContent" class="userContent">
         <div class="container grid grid-4 card">
@@ -58,6 +81,7 @@
                         
                         <div class="card">
                             <div class="gridItem label">
+                                <button class="forwardBtn" id="forwardBtn" onclick="forward(event)" style="display: none;"><i class="material-icons">arrow_forward</i></button>
                                 <h2>Create New Auto Event</h2>
                             </div>
                             <div class="gridItem">
@@ -126,17 +150,18 @@
                 <div class="autoEventFinal">
                     <div class="card">
                         <div class="gridItem label">
+                                <button class="backBtn" id="backBtn" onclick="back(event)" style="display: none;"><i class="material-icons">arrow_back</i></button>
                                 <h2>Create New Auto Event</h2>
                         </div>
                         <div class="gridItem">
-                            <h4 class="auto-event-time" id="auto-event-time">Here's some meeting times: </h4>
+                            <h4 class="auto-event-time" id="auto-event-time" style="margin: 5px;">Here's some meeting times: </h4>
                             <div id="auto-times">
                                 <!--Style: Scroll, Populate with Translated Times, Onclick => set Chosen Event Time-->
                             </div>
                         </div>
                         <div>
-                           
-                            <select id="auto-event-color-input" placeholder="Event Color">
+                            <div id ="indicator"></div>
+                            <select id="auto-event-color-input" class="autoEventInput" placeholder="Event Color" onclick="updateIndicator()">
                                     <option value="undefined">Default</option>
                                     <option value="1" id = "lavender">Lavender</option>
                                     <option value="2" id = "sage">Sage</option>

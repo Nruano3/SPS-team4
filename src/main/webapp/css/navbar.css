@@ -9,7 +9,7 @@
 .navbar .btn {
 
     display: grid;
-     justify-content: center;/*align horizontal if row*/
+    justify-content: center;/*align horizontal if row*/
     align-items: center;
     text-align: center;
     color: #333;
@@ -24,6 +24,7 @@
     grid-column: 1 / span 1;
     align-content: flex-start; 
 }
+
 .navbar .card.grid.grid-3 > *:nth-child(2){
     grid-column: 2 / span 2;
     text-align: center;

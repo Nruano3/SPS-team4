@@ -32,6 +32,8 @@ function forward(event){
 
 function addUser(){
    
+    var userList = document.getElementById('addedUsers');
+    userList.innerHTML = "";
     var emailField = document.getElementById('userEmailField');
     var user = emailField.value.toLowerCase();
     emailField.value = "";

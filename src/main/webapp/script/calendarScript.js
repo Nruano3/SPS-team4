@@ -13,6 +13,7 @@ function initializeCalendar() {
         currDate.setDate(temp.getDate() - (temp.getDay() - 1));
     } // statement makes sure week starts on a monday
     currDate = new Date(currDate.setHours(0, 0, 0, 0));
+    cleanCalendar();
     displayDays(currDate);
     populateCalendar(currDate);
 }

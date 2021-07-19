@@ -1,13 +1,14 @@
 
 async function addCurrentUser(){
 
+    var userList = document.getElementById('addedUsers');
+    userList.innerHTML = "";
    
     if(!sessionStorage.user){
         if(!gapi.auth2) loadGapi();
         var auth2 = await gapi.auth2.getAuthInstance();
         var user = await auth2.currentUser.get();
         sessionStorage.user = await user.getBasicProfile().getEmail();
-        
         addUserToList(sessionStorage.user);
     }else{
 
@@ -32,8 +33,6 @@ function forward(event){
 
 function addUser(){
    
-    var userList = document.getElementById('addedUsers');
-    userList.innerHTML = "";
     var emailField = document.getElementById('userEmailField');
     var user = emailField.value.toLowerCase();
     emailField.value = "";

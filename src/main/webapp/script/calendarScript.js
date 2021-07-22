@@ -1,6 +1,6 @@
 
 const dayOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-const colorids = ['#000000', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#000000', '#616161', '#3f51b5', '#0b8043', '#d60000', '#039be5'];
+const colorids = [' ', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#039be5', '#616161', '#3f51b5', '#0b8043', '#d60000' ];
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 var currDate = new Date();
 
@@ -61,7 +61,7 @@ function populateCalendar(calDate) {
                     var day = (new Date(when)).getDay();
                     var cid = event.colorId;
                     if (isNaN(cid)) {
-                        cid = 12;
+                        cid = 7;
                     }
                     appendEvent(event.summary, event.start, event.end, dayOfWeek[day], colorids[cid]);
                 }

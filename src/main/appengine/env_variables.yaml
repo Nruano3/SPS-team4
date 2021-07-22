@@ -1,2 +1,2 @@
 env_variables:
-  GOOGLE_API_KEY='AIzaSyDW5czqkKCAd-8ochRA3ZJulL2mrBMDwDI'
+  GOOGLE_API_KEY: "AIzaSyDW5czqkKCAd-8ochRA3ZJulL2mrBMDwDI"

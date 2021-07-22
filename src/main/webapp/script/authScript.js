@@ -44,7 +44,7 @@ function setAppCredentials(){
 
 //Load auth2 and client instances
 async function loadGapi(){
-	await gapi.load('auth2',await auth2Init);
+    await gapi.load('auth2',await auth2Init);
     gapi.load('client', clientInit);
 }
 
@@ -151,7 +151,7 @@ function signInCallback(authResult) {
             function(response){
                 onLoginSuccess();
                 
-            }).fail(function(resposne){
+            }).fail(function(response){
                 console.log(response);
                 alert("Oops, something went wrong, please try again...");
             });
@@ -281,11 +281,16 @@ async function loadUserData() {
 }
 
 function hideLogin(){
+
     $('#loginContent').attr('style', 'display: none');
+    $('#signInButton').attr('style', 'display: none');
+    $('#signOutButton').attr('style', 'display: grid');
 }
 
 function showLogin(){
     $('#loginContent').attr('style', 'display: grid');
+    $('#signInButton').attr('style', 'display: grid');
+    $('#signOutButton').attr('style', 'display: none');
 }
 
 

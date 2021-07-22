@@ -113,12 +113,10 @@ var userCalendarList = [];
 
         return newCalendarChildNode;
 
-
  }
 
 
 function toggleActiveCalendar(source){
-    console.log(source);
 
     var parentNode = source.parentNode;
     if(parentNode.classList.contains("active")) {
@@ -130,15 +128,22 @@ function toggleActiveCalendar(source){
 }
 
 function toggleActiveCalendarFromNode(source){
+
+        
     var node = source.target;
     var button = node.lastChild;
-    console.log(button);
-
-    if(node.classList.contains("active")){
-        node.classList.remove("active");
-        button.checked = false;
-    }else{
-        node.classList.add("active");
-        button.checked = true;
+    if(button == null) {
+       return; 
+    } 
+    else {
+        if(node.classList.contains("active")){
+            node.classList.remove("active");
+            button.checked = false;
+        }else{
+            node.classList.add("active");
+            button.checked = true;
+        }
     }
+
+    
 }

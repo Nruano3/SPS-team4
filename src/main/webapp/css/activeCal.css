@@ -3,6 +3,9 @@
     overflow-y: scroll;
 }
 
+#activeCalendarList .setActive {
+    display: block;
+}
 
 #calendarIndicator{
     height:16px; 

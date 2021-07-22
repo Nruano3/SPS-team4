@@ -1,4 +1,13 @@
 
+
+function createNewAutoEvent(){
+    $("#activeCalendarCard").attr("style", "display:none");
+    $("#autoEventCard").attr("style", "display:block");
+    $("#autoEventInit").attr("style", "display:grid");
+
+}
+
+
 async function addCurrentUser(){
 
     var userList = document.getElementById('addedUsers');
@@ -177,7 +186,6 @@ async function createAutoEvent(){
     //Get list of autoTime elements, find which one is active
 
     var activeTimeSelection = document.getElementsByClassName('timeactive');
-    console.log(activeTimeSelection);
     if(activeTimeSelection.length == 0){
         if(!document.getElementById('selection-error')){
             console.log("error");

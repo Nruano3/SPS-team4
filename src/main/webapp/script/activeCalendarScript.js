@@ -30,11 +30,23 @@
  *                          3: In new element innerHTML, add "Summary" as display value, add <input type="checkbox">, add value="calendarId"
  *                          4: Set new Element class to calendarListEntry for styling purposes
  *              4. Append new Children to parent object
+ * 
+ * 
+ * Step 3. Required: List of "Selected" Calendars
+ * 
+ *      Steps:
+ *              1. Attain the list of all selected Calendars
+ *              2. Select only the calendarId from each of the selected calendars
+ *              3. Stringify List of calendarIds
+ *              4. Make a "Post" request to "ActiveCalendar" servlet using the stringified list of calendarIds
+ *              5. Upon successful transmission, display a message saying so
  */
 
 async function displayActiveCalendarCard(){
     $('#autoEventCard').attr('style', 'display:none');
     $('#activeCalendarCard').attr('style', 'display:grid');
+    $("#setActive").attr("style", "display:block");
+    $("#setSuccess").attr("style", "display:none");
 
     await loadUserCalendarList();
 
@@ -56,13 +68,12 @@ var userCalendarList = [];
 
         //Execute the Request
         await request.execute(onCalendarListSuccess, onCalendarListFail);
-    });
-
-    
+    });    
 
  }
 
  async function onCalendarListSuccess(calList){
+    
     window.userCalendarList = await calList.items;
     displayCalendarList();
  }
@@ -75,9 +86,7 @@ var userCalendarList = [];
  async function displayCalendarList(){
      
     var parentNode = document.getElementById('activeCalendarList');
-
-    //await clearChildren(parentNode);
-    console.log("Cleared Children")
+    clearChildren(parentNode);
     window.userCalendarList.forEach(element => {
         appendNewCalendarChild(element, parentNode);
     });
@@ -89,7 +98,7 @@ var userCalendarList = [];
  }
 
  function appendNewCalendarChild(calendar, parentNode){
-    console.log(calendar);
+    
      var newCalendarChild = createCalendarChild(calendar);
 
      parentNode.prepend(newCalendarChild);
@@ -123,13 +132,11 @@ function toggleActiveCalendar(source){
         parentNode.classList.remove("active");
     } else{
         parentNode.classList.add("active");
-    }
-    
+    }    
 }
 
 function toggleActiveCalendarFromNode(source){
-
-        
+   
     var node = source.target;
     var button = node.lastChild;
     if(button == null) {
@@ -143,7 +150,77 @@ function toggleActiveCalendarFromNode(source){
             node.classList.add("active");
             button.checked = true;
         }
-    }
+    }   
+}
 
-    
+
+async function setActiveCalendars(){
+    var activeCalendars = getActiveCalendars();
+
+    var calendarIdList = await getCalendarIdList(activeCalendars);    
+
+    var response = await postToServlet(calendarIdList);
+}
+
+function getActiveCalendars(){
+
+    //Empty Return list
+    var activeCalendars = [];
+    //List of each "Selected" calendar
+    var selectedCalendars = document.getElementsByClassName('calendarListEntry active');
+
+     //For Each Selected calendar, push the calendar "id" into return array
+    Array.prototype.forEach.call(selectedCalendars, function(element){
+        activeCalendars.push(element.lastChild.value);
+    });
+
+    //Return the array
+    return activeCalendars;
+}
+
+function getCalendarIdList(list){
+    return JSON.stringify(list);
+}
+
+async function postToServlet(calendarIdList){
+
+    auth2 = await gapi.auth2.getAuthInstance();
+
+    var user = await auth2.currentUser.get();	
+    var profile = await user.getBasicProfile();
+
+    var userId = profile.getId();
+
+    //Setup Headers
+     $.ajaxSetup({
+            headers:{
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+    });
+
+    var baseUrl = window.location.protocol + "//" + window.location.hostname + '/ActiveCalendars';
+    $.post(
+        baseUrl,
+        {userList: calendarIdList, userId: userId},
+        function(response){
+            onActiveCalendarPostSuccess(response);
+        }
+        ).fail(function(){    
+            alert("Oops, something went wrong, please try again...");
+        });
+
+}
+
+function onActiveCalendarPostSuccess(response){
+    console.log(response);
+    if(response.success){
+        loadSuccessScreen();
+    }else if(response.error){
+        alert("Oops, something went wrong, please try again...");
+    }
+}
+
+function loadSuccessScreen(){
+    $("#setActive").attr("style", "display:none");
+    $("#successActive").attr("style", "display:block");
 }

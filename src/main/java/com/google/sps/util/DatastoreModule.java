@@ -279,5 +279,41 @@ public class DatastoreModule {
         // Stringify the entity into a Json String
         return EntityUtils.toString(entity);
 
-	}
+    }
+    
+
+    public static void storeActiveCalendars(String profileId, String[] calendars){
+
+        String calendarString = parseCalendarString(calendars);
+        keyFactory = dataStore.newKeyFactory().setKind("activeCalendars");
+        Entity userCalendarList = dataStore.get(keyFactory.newKey(profileId));
+        if(userCalendarList == null){
+            Entity.Builder builder = Entity.newBuilder(keyFactory.newKey(profileId));
+
+            builder.set("Calendar List", calendarString);
+
+            userCalendarList = builder.build();
+            dataStore.add(userCalendarList);
+
+        }else{
+            Entity newUserCalendarList = Entity.newBuilder(userCalendarList).set("Calendar List", calendarString).build();
+            dataStore.update(newUserCalendarList);
+        }
+    }
+
+    private static String parseCalendarString(String[] calendars){
+        
+        StringBuilder str = new StringBuilder();
+        
+        for(String calId : calendars){
+            str.append(calId).append(",");
+        }
+
+        String ret = str.toString();
+        if(ret != null && ret != "" && ret.length() != 0) ret = ret.substring(0, ret.length()-1);
+
+        return ret;
+
+    }
+    
 }

@@ -98,6 +98,7 @@ var userCalendarList = [];
  function createCalendarChild(calendar){
 
         var newCalendarChildNode = document.createElement('p');
+        newCalendarChildNode.onclick = toggleActiveCalendarFromNode;
 
         var calendarSummary = calendar.summary;
         //User primary calendar has summary equal to user email address
@@ -126,5 +127,18 @@ function toggleActiveCalendar(source){
         parentNode.classList.add("active");
     }
     
-    
+}
+
+function toggleActiveCalendarFromNode(source){
+    var node = source.target;
+    var button = node.lastChild;
+    console.log(button);
+
+    if(node.classList.contains("active")){
+        node.classList.remove("active");
+        button.checked = false;
+    }else{
+        node.classList.add("active");
+        button.checked = true;
+    }
 }

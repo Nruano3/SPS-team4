@@ -17,6 +17,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 300px;
 }
 .userContent .profile {
     align-items: center;
@@ -44,6 +45,7 @@
 }
 
 .userContent .userNav {
+    height: 200px;
     text-align: center;
     background-color: rgb(199, 199, 199);
     grid-row: 2;
@@ -69,6 +71,7 @@
     border-radius: 10px;
     grid-column: 2 / span 3;
     grid-row: 1 / span 2;
+    justify-self: center;
 }
 
 .userContent .event .card {
@@ -80,29 +83,51 @@
 
 .userContent .event input[type = "submit"] {
     padding: 5px;
-    float: none;
     justify-self: center;
 }
 
-.userContent .event .userList {
-    grid-row: 2;
-    grid-column: 1 / span 2;
-}
 
 .userContent input[type="email"] {
     font-size: 18px;
     border: 0;
     border-bottom: 2px solid #b4becb ;
-    width: 50%;
+    width: 100%;
     padding: 10px;
     
 }
-
+.userContent input[type="email"]:hover{
+     background-color: lightgray;
+}
 .userContent input[type="email"]:focus {
-    
     outline: none;
     border: 0;
-    border-bottom: 2px solid var(--light) ;
+    border-bottom: 2px solid var(--light);
+    background-color: whitesmoke;
     transition: 0.5s ease all;   
+}
+
+.userContent .event .addedUserP{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    height: 15px;
+    margin: 15px 0;
+    padding: 15px 0;
+}
+.userContent .event .addedUserEmail {
+    text-align: center;
+    text-justify: middle;
+    vertical-align: middle;
+    border: 1px solid var(--primary-color);
+    padding: 5px 5px;
+    margin: 10px;
+    outline: none;
+    border-radius: 5px;
+   
+}
+
+.userContent .event .btn {
+    margin: 10px;
 }
 

@@ -1,0 +1,144 @@
+#autoEventCard {
+    width: 800px;
+}
+
+.autoEventInit {
+    display: flex;
+    height: 600px;
+}
+
+
+.autoEventInit .card.grid {
+    grid-template-columns: repeat(6, 1fr);
+    
+}
+
+.autoEventInit .grid .label {
+    grid-row: 1;
+    grid-column: 1 / span 6;
+}
+.autoEventInput.title {
+    grid-row: 2;
+    grid-column: 2 / span 5;
+    font-size: 18px;
+    border: 0;
+    border-bottom: 2px solid #b4becb ;
+    width: 100%;
+    padding: 10px;
+   
+}
+
+.autoEventInput.title:focus {
+    outline: none;
+    border: 0;
+    border-bottom: 2px solid var(--light);
+    transition: 0.5s ease all;   
+}
+
+
+
+.autoEventInput {
+    outline: none;
+    border: 0;
+}
+
+.autoEventInput:hover {
+    background-color: lightgray;
+}
+
+.autoEventInput:focus {
+    background-color: whitesmoke;
+    border-bottom: 2px solid var(--light);
+    transition: 0.5s ease all;   
+}
+
+.autoEventInput.meetingLength {
+
+    grid-row: 2;
+    grid-column: 2 / span 3;
+    font-size: 12px;
+    border: 0;
+    border-bottom: 2px solid #b4becb;
+   
+}
+.autoEventInput.meetingLength:focus {
+    grid-row: 2;
+    grid-column: 2 / span 3;
+    font-size: 12px;
+    border: 0;
+    border-bottom: 2px solid var(--light);
+    transition: 0.5s ease all; 
+
+}
+.autoEventFinal{
+    display: none;
+    height: 585px;
+    margin: 7.5px 0;
+}
+
+#addedUsers {
+    display: block;
+    height: 90px;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+
+#auto-times {
+    
+    justify-items: space-around;
+    outline: 2px solid var(--primary-color);
+    height: 300px;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+
+.userContent .event .time,
+.userContent .event .timeactive {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    height: 15px;
+    margin: 15px 0;
+    padding: 15px 0;
+}
+
+
+.timeactive p {
+    padding: 10px 10px;
+    outline: none;
+    border-bottom: 3px solid var(--primary-color);
+    border-radius: 10px;
+    background-color: lightgray;
+    transition: 0.5s ease all; 
+}
+
+
+#indicator {
+    height:16px; 
+    width:16px; 
+    display: inline-block; 
+    background-color: #039be5;
+    border-radius: 4px;
+}
+
+#forwardBtn,
+#backBtn {
+    width: 40px;
+    background: none;
+    color: var(--primary-color);
+    border: none;
+    border-bottom: 1px soild var(--primary-color);
+}
+
+#forwardBtn:hover,
+#backBtn:hover {
+    background: none;
+    color: var(--light);
+    border: none;
+    border-bottom: 1px soild var(--light);
+    background-color: lightgray;
+    transition: 0.5s ease all; 
+}

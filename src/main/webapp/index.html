@@ -6,34 +6,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/login.css">
     <link rel="stylesheet" href="css/utility.css">
     <link rel="stylesheet" href="css/userContent.css">
-    
+    <link rel="stylesheet" href="css/autoEvent.css">
+    <link rel="shortcut icon" type="image/jpg" href="/mmIcoDark.png"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>SPS-team4</title>
     <meta name="google-signin-client_id"
         content="569803275461-e4n2du96d1b8mps300gh834sr3es88j1.apps.googleusercontent.com">
 
     <!-- BEGIN Pre-requisites -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://apis.google.com/js/client:platform.js"></script>
     <script src="https://apis.google.com/js/api:client.js"></script>
+    
 </head>
 <body>
     
     <!--Nav Bar-->
     <div class="navbar">
         <div class = "container flex">
-            <h1>Meeting Manager</h1>
+            <div class="flex" style="vertical-align: middle;">
+                <img src="/mmIcoDark.png" style="display: inline-block; height: 40px; width: 45px; margin-top: 5px;"><p style="font-size: 40px; margin: 0 10px"> | </p>
+                <h1> Meeting Manager</h1>
+            </div>
             <button class="btn card grid grid-3" id="signInButton"><img src="Google__G__Logo.png"><p><strong>Sign in with Google</strong></p></button>
             <button class="btn card grid grid-3" id="signOutButton"><img src="Google__G__Logo.png"><p><strong>Sign Out</strong></p></button>
         </div>
     </div>
 
-    <!--Login Screen Content-->
-    <div id="loginContent">
-        <div class = "container grid">
-
+    
+    <div id="loginContent" class="loginContent">
+        <div class="container grid grid-2 card">
+            <div class="flex header" style="vertical-align: middle;">
+                <img src="/mmIcoDark.png" style="display: inline-block; height: 40px; width: 45px; margin-top: 5px;"><p style="font-size: 40px; margin: 0 10px"> | </p>
+                <h1> Meeting Manager</h1>
+            </div>
+            <p class="loginDescription">
+                Welcome to Summer 2021 SPS Team 4's
+                Meeting Manager App! This app is designed to 
+                automate meeting and event scheduling. These 
+                range from Work Meetings to Study Groups. Using Google 
+                Calendars, this process is made simple and 
+                cross platform. Have your group members 
+                register with Meeting Manager today and get
+                started!
+            </p>
+            <button class="btn card grid grid-3" id="getStartedButton"><img src="Google__G__Logo.png"><p><strong>Get Started with Google</strong></p></button>
         </div>
+
+
     </div>
 
     <div id="userContent" class="userContent">
@@ -52,20 +75,110 @@
                     <li><a href="#" onclick="setActiveCalendars()">Set Active Calendar(s)</a></li>
                 </ul>
             </div>
-            
+    
             <div id="autoEventCard" class="event">
-                <div id="autoEventInit">
-                        <div class="card grid grid-2">
-                           <h2>Create New Auto Event</h2>
-                           <div class="userList"><h3 id="autoEventHeader">Enter Users by Email Address</h3>
-                                <input type="email" class="userEmail my-2" placeholder="example@gmail.com"></br>
-                                <button class="addUserByEmailButton btn">Add User</button>
+                <div class="autoEventInit">
+                        
+                        <div class="card">
+                            <div class="gridItem label">
+                                <button class="forwardBtn" id="forwardBtn" onclick="forward(event)" style="display: none;"><i class="material-icons">arrow_forward</i></button>
+                                <h2>Create New Auto Event</h2>
+                            </div>
+                            <div class="gridItem">
+                                <input class="autoEventInput title" type="text" id="auto-event-title" placeholder="Add Title"></input>
+                            </div>
+                            
+                            <div class="gridItem">
+                                <img src="clock.ico" style="margin: 10px; height: 20px; display: inline-block; vertical-align: middle"><p style="display: inline-block;">Time Frame:</p>
+                                <select class="autoEventInput" id="auto-start-constraint" data-initial-value="9:00am">
+                                    <option value=9 disabled selected>9:00am</option>
+                                            <option value=0>12:00am</option><option value=1>1:00am</option><option value=2>2:00am</option>
+                                            <option value=3>3:00am</option><option value=4>4:00am</option><option value=5>5:00am</option>
+                                            <option value=6>6:00am</option><option value=7>7:00am</option><option value=8>8:00am</option>
+                                            <option value=9>9:00am</option><option value=10>10:00am</option><option value=11>11:00am</option>
+                                            <option value=12>12:00pm</option><option value=13>1:00pm</option><option value=14>2:00pm</option>
+                                            <option value=15>3:00pm</option><option value=16>4:00pm</option><option value=17>5:00pm</option>
+                                            <option value=18>6:00pm</option><option value=19>7:00pm</option><option value=20>8:00pm</option>
+                                            <option value=21>9:00pm</option><option value=22>10:00pm</option><option value=23>11:00pm</option>
+                                </select>
+                           
+                                <span style='font-size: 30px; margin: 10px;'> - </span>
+                                <select class="autoEventInput" id="auto-end-constraint" placeholder="5:00pm">
+                                    <option value=17 disabled selected>5:00pm</option>
+                                            <option value=0>12:00am</option><option value=1>1:00am</option><option value=2>2:00am</option>
+                                            <option value=3>3:00am</option><option value=4>4:00am</option><option value=5>5:00am</option>
+                                            <option value=6>6:00am</option><option value=7>7:00am</option><option value=8>8:00am</option>
+                                            <option value=9>9:00am</option><option value=10>10:00am</option><option value=11>11:00am</option>
+                                            <option value=12>12:00pm</option><option value=13>1:00pm</option><option value=14>2:00pm</option>
+                                            <option value=15>3:00pm</option><option value=16>4:00pm</option><option value=17>5:00pm</option>
+                                            <option value=18>6:00pm</option><option value=19>7:00pm</option><option value=20>8:00pm</option>
+                                            <option value=21>9:00pm</option><option value=22>10:00pm</option><option value=23>11:00pm</option>
+                                </select>
                            </div>
+                           <div class="gridItem">
+                               <p style="display: inline-block;">Length:</p>
+                                <select class="autoEventInput meetingLength" type="text" id="auto-event-length" placeholder="Meeting Length">
+                                    <option value=1 disabled selected>1 hour(s)</option>
+                                    <option value=1>1 hour(s)</option><option value=2>2 hour(s)</option><option value=3>3 hour(s)</option>
+                                    <option value=4>4 hour(s)</option><option value=5>5 hour(s)</option><option value=6>6 hour(s)</option>
+                                    <option value=7>7 hour(s)</option><option value=8>8 hour(s)</option><option value=9>9 hour(s)</option>
+                                    <option value=10>10 hour(s)</option><option value=11>11 hour(s)</option><option value=12>12 hour(s)</option>
+                                    <option value=13>13 hour(s)</option><option value=14>14 hour(s)</option><option value=15>15 hour(s)</option>
+                                    <option value=16>16 hour(s)</option><option value=17>17 hour(s)</option><option value=18>18 hour(s)</option>
+                                    <option value=19>19 hour(s)</option><option value=20>20 hour(s)</option><option value=21>21 hour(s)</option>
+                                    <option value=22>22 hour(s)</option><option value=23>23 hour(s)</option><option value=24>24 hour(s)</option>
+                                </select>
+                            </div>
+
+                           <div class="userList gridItem">
+                                <h3 id="autoEventHeader">Enter Users by Email Address</h3>
+                                <input type="email" id="userEmailField" class="userEmail my-2" placeholder="example@gmail.com"></br>
+                                <button class="addUserByEmailButton btn" onclick="addUser()">Add User</button>
+                           </div>
+
+                           <div class="gridItem" id="addedUsers">
+                               
+                           </div>
+                           <div>
+                               <button class="btn" onclick="calculateAutoEventTime()">Submit</button>
+                            </div>
                         </div>
+                        
                 </div>
-                <div id="autoEventFinal">
-                    <div class="card grid grid-2">
-                    
+
+
+                <div class="autoEventFinal">
+                    <div class="card">
+                        <div class="gridItem label">
+                                <button class="backBtn" id="backBtn" onclick="back(event)" style="display: none;"><i class="material-icons">arrow_back</i></button>
+                                <h2>Create New Auto Event</h2>
+                        </div>
+                        <div class="gridItem">
+                            <h4 class="auto-event-time" id="auto-event-time" style="margin: 5px;">Here's some meeting times: </h4>
+                            <div id="auto-times">
+                                <!--Style: Scroll, Populate with Translated Times, Onclick => set Chosen Event Time-->
+                            </div>
+                        </div>
+                        <div>
+                            <div id ="indicator"></div>
+                            <select id="auto-event-color-input" class="autoEventInput" placeholder="Event Color" onclick="updateIndicator()">
+                                    <option value="undefined">Default</option>
+                                    <option value="1" id = "lavender">Lavender</option>
+                                    <option value="2" id = "sage">Sage</option>
+                                    <option value="3" id = "grape">Grape</option>
+                                    <option value="4" id = "flamingo">Flamingo</option>
+                                    <option value="5" id = "banana">Banana</option>
+                                    <option value="6" id = "tangerine">Tangerine</option>
+                                    <option value="8" id = "graphite">Graphite</option>
+                                    <option value="9" id = "blueberry">Blueberry</option>
+                                    <option value="10" id = "basil">Basil</option>
+                                    <option value="11" id = "tomato">Tomato</option>
+                                </select>
+                        </div>
+                        <div>
+                               <button class="btn" onclick="createAutoEvent()">Create</button>
+                            </div>
+
                     </div>
                 </div>
             </div>
@@ -105,7 +218,7 @@
                 <div class="modal-content">
                 <span id="modalclose" onclick=closemodal()>&times;</span>
                 <p>Schedule New Event</p>
-                <form id="eventForm" method="POST">
+                <form id="eventForm">
 
                     <label for="title-input">Event Title<span class="required">*</span>:</label>
                         <input type="text" id="title-input" placeholder="Event Title"
@@ -222,7 +335,10 @@
     </div> <!-- end of userContent div -->
 
     <div id="signOutContent"></div>
-    <script src="script.js"></script>
+    <script src="script/authScript.js"></script>
+    <script src="script/eventScript.js"></script>
+     <script src="script/calendarScript.js"></script>
+     <script src="script/autoEventScript.js"></script>
     <script>start()</script>
 </body>
 </html>

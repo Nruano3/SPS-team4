@@ -63,6 +63,12 @@
     grid-template-columns: repeat(4, 1fr);
 }
 
+.grid-item {
+    height: auto;
+    margin: 5px 0;
+    justify-self: center;
+    align-self: center;
+}
 
 
 
@@ -133,5 +139,19 @@
     padding: 2rem 0;
 }
 
+::-webkit-scrollbar-thumb {
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background: #dadce0;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    min-height: 40px;
+}
 
+::-webkit-scrollbar {
+    background: transparent;
+    height: 8px;
+    width: 8px;
+}
 

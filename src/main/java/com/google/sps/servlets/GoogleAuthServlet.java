@@ -80,7 +80,7 @@ public class GoogleAuthServlet extends HttpServlet{
                     JacksonFactory.getDefaultInstance(),
                     "https://oauth2.googleapis.com/token",
                     APP_CREDENTIALS.getClient_id(),
-                   APP_CREDENTIALS.getClient_secret(),
+                    APP_CREDENTIALS.getClient_secret(),
                     authCode,
                     "postmessage")  // Specify the same redirect URI that you use with your web
                                     // app. If you don't have a web version of your app, you can

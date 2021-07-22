@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/utility.css">
     <link rel="stylesheet" href="css/userContent.css">
     <link rel="stylesheet" href="css/autoEvent.css">
+    <link rel="stylesheet" href="css/activeCal.css">
     <link rel="shortcut icon" type="image/jpg" href="/mmIcoDark.png"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>SPS-team4</title>
@@ -72,7 +73,7 @@
                     <li><a href="#" onclick="createNewAutoEvent()">New Auto Event</a></li>
                     <li><a href="#" onclick="createNewEvent()">New Regular Event</a></li>
                     <li><a href="#" onclick="addGroupMember()">Add Group Member</a></li>
-                    <li><a href="#" onclick="loadUserCalendarList()">Set Active Calendar(s)</a></li>
+                    <li><a href="#" onclick="displayActiveCalendarCard()">Set Active Calendar(s)</a></li>
                 </ul>
             </div>
     
@@ -177,12 +178,23 @@
                         </div>
                         <div>
                                <button class="btn" onclick="createAutoEvent()">Create</button>
-                            </div>
-
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <div id="activeCalendarCard" class="list" style="display:none;">
+                <div>
+                    <h3>User Calender List</h3>
+                </div>
+                <div id="activeCalendarList">
+                    <!--Parent Node that Gets Filled with List of User Calendar List-->
+                </div>
+                <button class="btn" onclick="setActiveCalendars()">Save</button>
+            </div>
+            <!--
+           
+            -->
             <div class = "calview">
                 <p id = "month"></p><br/>
                 <div id = "calendar">

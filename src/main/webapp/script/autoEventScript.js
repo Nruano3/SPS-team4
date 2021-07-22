@@ -292,7 +292,7 @@ function parseDate(date){
     return temp;
 }
 
-var googleColors = [' ', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#039be5', '#616161', '#3f51b5', '#0b8043', '#d60000'  ];
+var googleColors = [' ', '#7986cb', '#33b679', '#8e24aa', '#e67c73', '#f6c026', '#f5511d', '#039be5', '#616161', '#3f51b5', '#0b8043', '#d60000'];
 function updateIndicator(){
     var indicator = document.getElementById('indicator');
     var colorId = document.getElementById('auto-event-color-input').value;

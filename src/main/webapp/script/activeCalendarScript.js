@@ -106,19 +106,25 @@ var userCalendarList = [];
         }
         var calendarId = calendar.id;
         var calendarColor = calendar.backgroundColor;
-        newCalendarChildNode.innerHTML = "<div class=\'text\'><div id=\'calendarIndicator\' style=\'background-color:" + calendarColor +"\'></div>"+ calendarSummary+ "<input type=\'checkbox\' value=\""+ calendarId + "\"></div>"
+        newCalendarChildNode.innerHTML = "<div class=\'text\'><div id=\'calendarIndicator\' style=\'background-color:" + calendarColor +"\'></div>"+ calendarSummary+ "</div><input type=\'checkbox\' value=\""+ calendarId + "\" onclick=\"toggleActiveCalendar(this)\">"
 
         newCalendarChildNode.className = "calendarListEntry";
 
-        console.log(calendarSummary + " " + calendarId + " " + calendarColor);
-        
-        console.log(newCalendarChildNode);
         return newCalendarChildNode;
 
 
-        
-        
-
-
-
  }
+
+
+function toggleActiveCalendar(source){
+    console.log(source);
+
+    var parentNode = source.parentNode;
+    if(parentNode.classList.contains("active")) {
+        parentNode.classList.remove("active");
+    } else{
+        parentNode.classList.add("active");
+    }
+    
+    
+}

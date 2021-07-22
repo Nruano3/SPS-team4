@@ -183,14 +183,16 @@
                 </div>
             </div>
 
-            <div id="activeCalendarCard" class="list" style="display:none;">
-                <div>
-                    <h3>User Calender List</h3>
+            <div id="activeCalendarCard" class="event" style="display:none;">
+                <div class="card">
+                    <div>
+                        <h3 style="margin: 10px;">User Calender List: </h3>
+                    </div>
+                    <div id="activeCalendarList">
+                        <!--Parent Node that Gets Filled with List of User Calendar List-->
+                    </div>
+                    <button class="btn" onclick="setActiveCalendars()">Save</button>
                 </div>
-                <div id="activeCalendarList">
-                    <!--Parent Node that Gets Filled with List of User Calendar List-->
-                </div>
-                <button class="btn" onclick="setActiveCalendars()">Save</button>
             </div>
             <!--
            

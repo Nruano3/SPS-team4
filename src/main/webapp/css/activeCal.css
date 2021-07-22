@@ -1,6 +1,41 @@
+#activeCalendarList {
+    height: 200px;
+    overflow-y: scroll;
+}
+
+
 #calendarIndicator{
     height:16px; 
     width:16px; 
     display: inline-block; 
     border-radius: 4px;
+    margin: 0 5px;
+}
+
+.calendarListEntry .text {
+    line-height: 20px;
+    padding: 10px;
+    font-size: 18px;
+
+}
+.calendarListEntry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.5s ease all; 
+}
+
+.calendarListEntry.active {
+    margin: 5px 0;
+    padding-right: 5px;
+    outline: none;
+    border-bottom: 3px solid var(--primary-color);
+    border-radius: 10px;
+    background-color: lightgray;
+    transition: 0.5s ease all; 
+}
+
+#activeCalendarCard {
+    width: 600px;
+    height: 400px;
 }

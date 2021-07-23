@@ -46,7 +46,7 @@ async function displayActiveCalendarCard(){
     $('#autoEventCard').attr('style', 'display:none');
     $('#activeCalendarCard').attr('style', 'display:grid');
     $("#setActive").attr("style", "display:block");
-    $("#setSuccess").attr("style", "display:none");
+    $("#successActive").attr("style", "display:none");
 
     await loadUserCalendarList();
 
@@ -87,20 +87,44 @@ var userCalendarList = [];
      
     var parentNode = document.getElementById('activeCalendarList');
     clearChildren(parentNode);
+    var currentActiveCalendars = await getActiveCalendarsFromServer();
     window.userCalendarList.forEach(element => {
-        appendNewCalendarChild(element, parentNode);
+        appendNewCalendarChild(element, parentNode, currentActiveCalendars);
     });
+
     
+ }
+
+ async function getActiveCalendarsFromServer(){
+     
+    auth2 = await gapi.auth2.getAuthInstance();
+
+    var user = await auth2.currentUser.get();
+
+    var profile = await user.getBasicProfile();
+
+    var userId = profile.getId();
+
+    var responseFromServer = await fetch("/ActiveCalendars?userId="+userId);
+
+    return await responseFromServer.json();
+
  }
 
  function clearChildren(parentNode){
      parentNode.innerHTML = "";
  }
 
- function appendNewCalendarChild(calendar, parentNode){
+ async function appendNewCalendarChild(calendar, parentNode, currentActiveCalendars){
     
-     var newCalendarChild = createCalendarChild(calendar);
-
+     var newCalendarChild = await createCalendarChild(calendar);
+     if(currentActiveCalendars.includes(newCalendarChild.lastChild.value)){
+        if(!newCalendarChild.classList.contains('active')){
+            newCalendarChild.classList.add('active');
+            newCalendarChild.lastChild.checked = true;
+        }
+     }
+    
      parentNode.prepend(newCalendarChild);
  }
 
@@ -155,6 +179,7 @@ function toggleActiveCalendarFromNode(source){
 
 
 async function setActiveCalendars(){
+
     var activeCalendars = getActiveCalendars();
 
     var calendarIdList = await getCalendarIdList(activeCalendars);    

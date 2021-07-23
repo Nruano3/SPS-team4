@@ -1,6 +1,8 @@
 package com.google.sps.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,8 +32,9 @@ public class ActiveCalendarsServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         res.setContentType("application/json;");
-        String retJson = new Gson().toJson(DatastoreModule.getActiveCalendarList(req.getParameter("userId")));
-        System.out.println(retJson);
+        String[] activeCalendars = DatastoreModule.getActiveCalendarList(req.getParameter("userId"));
+        String retJson = new Gson().toJson(activeCalendars);
+        
         res.getWriter().println(retJson);
     }
 

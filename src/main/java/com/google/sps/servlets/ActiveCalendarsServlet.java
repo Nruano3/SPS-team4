@@ -30,9 +30,9 @@ public class ActiveCalendarsServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         res.setContentType("application/json;");
-
-        
-        res.getWriter().println("{\"success\": true}");
+        String retJson = new Gson().toJson(DatastoreModule.getActiveCalendarList(req.getParameter("userId")));
+        System.out.println(retJson);
+        res.getWriter().println(retJson);
     }
 
 

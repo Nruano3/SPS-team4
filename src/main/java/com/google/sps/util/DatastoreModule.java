@@ -315,5 +315,17 @@ public class DatastoreModule {
         return ret;
 
     }
+
+    public static String[] getActiveCalendarList(String userEmail){
+        
+        String[] activeCalendars;
+        keyFactory = dataStore.newKeyFactory().setKind("activeCalendars");
+        Key profileKey = keyFactory.newKey(userEmail);
+
+        activeCalendars = dataStore.get(profileKey).getString("Calendar List").split(",", 0);
+        
+        return activeCalendars;
+    }
+
     
 }

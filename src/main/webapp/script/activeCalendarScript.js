@@ -213,10 +213,11 @@ async function postToServlet(calendarIdList){
 
 function onActiveCalendarPostSuccess(response){
     console.log(response);
-    if(response.success){
-        loadSuccessScreen();
-    }else if(response.error){
+        
+    if(response.error){
         alert("Oops, something went wrong, please try again...");
+    }else {
+        loadSuccessScreen();
     }
 }
 
